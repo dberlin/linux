@@ -34,7 +34,11 @@
  * PMKID_V3: Version 3 PMKID
  * EVENT_MSGS_EXT: Event messages extension
  * JOIN_V1: Version 1 join struct
- * GCMP: GCMP Cipher suite support
+ * SAE_EXT: SAE be handled by userspace supplicant
+ * FBT: Fast BSS transition
+ * OKC: Unstandardized form of fast bss transition
+ * GCMP: Firmware has defined GCMP or not.
+ * TWT: Firmware has Target Wake Time support.
  */
 #define BRCMF_FEAT_LIST \
 	BRCMF_FEAT_DEF(MBSS) \
@@ -62,7 +66,8 @@
 	BRCMF_FEAT_DEF(PMKID_V2) \
 	BRCMF_FEAT_DEF(PMKID_V3) \
 	BRCMF_FEAT_DEF(EVENT_MSGS_EXT) \
-	BRCMF_FEAT_DEF(GCMP)
+	BRCMF_FEAT_DEF(GCMP) \
+	BRCMF_FEAT_DEF(TWT)
 
 /*
  * Quirks:

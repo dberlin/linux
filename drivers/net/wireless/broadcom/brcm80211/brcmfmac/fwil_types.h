@@ -1138,11 +1138,14 @@ struct brcmf_rssi_be {
  * @rate_limit_msec: RSSI event rate limit
  * @rssi_level_num: number of supplied RSSI levels
  * @rssi_levels: RSSI levels in ascending order
+ * @version: Version number of RSSI structure
  */
 struct brcmf_rssi_event_le {
 	__le32 rate_limit_msec;
 	s8 rssi_level_num;
 	s8 rssi_levels[BRCMF_MAX_RSSI_LEVELS];
+	u8 version;
+	u8 pad[2];
 };
 
 /**
@@ -1727,6 +1730,29 @@ struct brcmf_rssi_event {
 	s8 rssi_levels[MAX_RSSI_LEVELS];
 	u8 version;
 	s8 pad[2];
+};
+
+/**
+ * struct brcmf_auth_req_status_le - external auth request and status update
+ *
+ * @flags: flags for external auth status
+ * @peer_mac: peer MAC address
+ * @ssid_len: length of ssid
+ * @ssid: ssid characters
+ */
+struct brcmf_auth_req_status_le {
+	__le16 flags;
+	u8 peer_mac[ETH_ALEN];
+	__le32 ssid_len;
+	u8 ssid[IEEE80211_MAX_SSID_LEN];
+	u8 pmkid[WLAN_PMKID_LEN];
+};
+
+/* WLC_E_RSSI event data */
+struct brcmf_event_data_rssi {
+	__le32 rssi;
+	__le32 snr;
+	__le32 noise;
 };
 
 #endif /* FWIL_TYPES_H_ */

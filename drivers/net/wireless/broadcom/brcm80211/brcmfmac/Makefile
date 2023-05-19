@@ -28,8 +28,8 @@ brcmfmac-objs += \
 		join_param.o \
 		scan_param.o \
 		xtlv.o \
-		interface_create.o
-
+		interface_create.o \
+		twt.o
 brcmfmac-$(CONFIG_BRCMFMAC_PROTO_BCDC) += \
 		bcdc.o \
 		fwsignal.o

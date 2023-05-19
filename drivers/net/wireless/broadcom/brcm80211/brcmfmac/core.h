@@ -268,6 +268,8 @@ struct brcmf_if {
 	struct in6_addr ipv6_addr_tbl[NDOL_MAX_ENTRIES];
 	u8 ipv6addr_idx;
 	bool fwil_fwerr;
+	struct list_head twt_sess_list;         /* dll of TWT sessions */
+	spinlock_t twt_sess_list_lock;
 };
 
 int brcmf_netdev_wait_pend8021x(struct brcmf_if *ifp);

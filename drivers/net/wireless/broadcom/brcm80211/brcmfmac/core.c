@@ -30,6 +30,7 @@
 #include "proto.h"
 #include "pcie.h"
 #include "common.h"
+#include "twt.h"
 
 #define WL_CNT_XTLV_SLICE_IDX 256
 
@@ -1546,6 +1547,9 @@ struct brcmf_if *brcmf_add_if(struct brcmf_pub *drvr, s32 bsscfgidx, s32 ifidx,
 
 	init_waitqueue_head(&ifp->pend_8021x_wait);
 	spin_lock_init(&ifp->netif_stop_lock);
+	spin_lock_init(&ifp->twt_sess_list_lock);
+	 /* Initialize TWT Session list */
+	INIT_LIST_HEAD(&ifp->twt_sess_list);
 
 	if (mac_addr != NULL)
 		memcpy(ifp->mac_addr, mac_addr, ETH_ALEN);
@@ -1927,6 +1931,7 @@ static int brcmf_bus_started(struct brcmf_pub *drvr, struct cfg80211_ops *ops)
 	brcmf_feat_debugfs_create(drvr);
 	brcmf_proto_debugfs_create(drvr);
 	brcmf_bus_debugfs_create(bus_if);
+	brcmf_twt_debugfs_create(drvr);
 
 	return 0;
 

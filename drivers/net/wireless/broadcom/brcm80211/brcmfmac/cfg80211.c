@@ -36,6 +36,7 @@
 #include "xtlv.h"
 #include "ratespec.h"
 #include "interface_create.h"
+#include "twt.h"
 
 #define BRCMF_SCAN_IE_LEN_MAX		2048
 
@@ -1409,6 +1410,7 @@ static void brcmf_link_down(struct brcmf_cfg80211_vif *vif, u16 reason,
 			brcmf_set_pmk(vif->ifp, NULL, 0);
 		vif->profile.use_fwsup = BRCMF_PROFILE_FWSUP_NONE;
 	}
+
 	brcmf_dbg(TRACE, "Exit\n");
 }
 
@@ -2369,8 +2371,14 @@ brcmf_cfg80211_disconnect(struct wiphy *wiphy, struct net_device *ndev,
 	scbval.val = cpu_to_le32(reason_code);
 	err = brcmf_fil_cmd_data_set(ifp, BRCMF_C_DISASSOC,
 				     &scbval, sizeof(scbval));
-	if (err)
+	if (err) {
 		bphy_err(drvr, "error (%d)\n", err);
+	} else {
+		if (brcmf_feat_is_enabled(ifp, BRCMF_FEAT_TWT)) {
+		         /* Cleanup TWT Session list */
+		        brcmf_twt_cleanup_sessions(ifp);
+		}
+	}
 
 	brcmf_dbg(TRACE, "Exit\n");
 	return err;
@@ -5914,7 +5922,7 @@ static int brcmf_cfg80211_set_cqm_rssi_config(struct wiphy *wiphy,
 {
 	struct brcmf_cfg80211_info *cfg = wiphy_to_cfg(wiphy);
 	struct brcmf_if *ifp;
-	struct brcmf_rssi_event rssi;
+	struct brcmf_rssi_event_le rssi;
 	int err = 0;
 
 	ifp = netdev_priv(dev);
@@ -5923,11 +5931,11 @@ static int brcmf_cfg80211_set_cqm_rssi_config(struct wiphy *wiphy,
 
 	if (rssi_thold == 0) {
 		rssi.rate_limit_msec = cpu_to_le32(0);
-		rssi.num_rssi_levels = 0;
+		rssi.rssi_level_num = 0;
 		rssi.version = BRCMF_RSSI_EVENT_IFX_VERSION;
 	} else {
 		rssi.rate_limit_msec = cpu_to_le32(0);
-		rssi.num_rssi_levels = 3;
+		rssi.rssi_level_num = 3;
 		rssi.rssi_levels[0] = S8_MIN;
 		rssi.rssi_levels[1] = rssi_thold;
 		rssi.rssi_levels[2] = S8_MAX;
@@ -6785,6 +6793,182 @@ static s32 brcmf_notify_vif_event(struct brcmf_if *ifp,
 	return -EINVAL;
 }
 
+static s32
+brcmf_notify_ext_auth_request(struct brcmf_if *ifp,
+			      const struct brcmf_event_msg *e, void *data)
+{
+	struct brcmf_pub *drvr = ifp->drvr;
+	struct cfg80211_external_auth_params params;
+	struct brcmf_auth_req_status_le *auth_req =
+		(struct brcmf_auth_req_status_le *)data;
+	s32 err = 0;
+
+	brcmf_dbg(INFO, "Enter: event %s (%d) received\n",
+		  brcmf_fweh_event_name(e->event_code), e->event_code);
+
+	if (e->datalen < sizeof(*auth_req)) {
+		bphy_err(drvr, "Event %s (%d) data too small. Ignore\n",
+			 brcmf_fweh_event_name(e->event_code), e->event_code);
+		return -EINVAL;
+	}
+
+	memset(&params, 0, sizeof(params));
+	params.action = NL80211_EXTERNAL_AUTH_START;
+	params.key_mgmt_suite = WLAN_AKM_SUITE_SAE;
+	params.status = WLAN_STATUS_SUCCESS;
+	params.ssid.ssid_len = min_t(u32, 32, le32_to_cpu(auth_req->ssid_len));
+	memcpy(params.ssid.ssid, auth_req->ssid, params.ssid.ssid_len);
+	memcpy(params.bssid, auth_req->peer_mac, ETH_ALEN);
+
+	err = cfg80211_external_auth_request(ifp->ndev, &params, GFP_ATOMIC);
+	if (err)
+		bphy_err(drvr, "Ext Auth request to supplicant failed (%d)\n",
+			 err);
+
+	return err;
+}
+
+static s32
+brcmf_notify_auth_frame_rx(struct brcmf_if *ifp,
+			   const struct brcmf_event_msg *e, void *data)
+{
+	struct brcmf_pub *drvr = ifp->drvr;
+	struct brcmf_cfg80211_info *cfg = drvr->config;
+	struct wireless_dev *wdev;
+	u32 mgmt_frame_len = e->datalen - sizeof(struct brcmf_rx_mgmt_data);
+	struct brcmf_rx_mgmt_data *rxframe = (struct brcmf_rx_mgmt_data *)data;
+	u8 *frame = (u8 *)(rxframe + 1);
+	struct brcmu_chan ch;
+	struct ieee80211_mgmt *mgmt_frame;
+	s32 freq;
+
+	brcmf_dbg(INFO, "Enter: event %s (%d) received\n",
+		  brcmf_fweh_event_name(e->event_code), e->event_code);
+
+	if (e->datalen < sizeof(*rxframe)) {
+		bphy_err(drvr, "Event %s (%d) data too small. Ignore\n",
+			 brcmf_fweh_event_name(e->event_code), e->event_code);
+		return -EINVAL;
+	}
+
+	wdev = &ifp->vif->wdev;
+	WARN_ON(!wdev);
+
+	ch.chspec = be16_to_cpu(rxframe->chanspec);
+	cfg->d11inf.decchspec(&ch);
+
+	mgmt_frame = kzalloc(mgmt_frame_len, GFP_KERNEL);
+	if (!mgmt_frame)
+		return -ENOMEM;
+
+	mgmt_frame->frame_control = cpu_to_le16(IEEE80211_STYPE_AUTH);
+	memcpy(mgmt_frame->da, ifp->mac_addr, ETH_ALEN);
+	memcpy(mgmt_frame->sa, e->addr, ETH_ALEN);
+	brcmf_fil_cmd_data_get(ifp, BRCMF_C_GET_BSSID, mgmt_frame->bssid,
+			       ETH_ALEN);
+	frame += offsetof(struct ieee80211_mgmt, u);
+	memcpy(&mgmt_frame->u, frame,
+	       mgmt_frame_len - offsetof(struct ieee80211_mgmt, u));
+
+	freq = ieee80211_channel_to_frequency(ch.control_ch_num,
+			fwil_band_to_nl80211(ch.band));
+
+	cfg80211_rx_mgmt(wdev, freq, 0, (u8 *)mgmt_frame, mgmt_frame_len,
+			 NL80211_RXMGMT_FLAG_EXTERNAL_AUTH);
+	kfree(mgmt_frame);
+	return 0;
+}
+
+static s32
+brcmf_notify_mgmt_tx_status(struct brcmf_if *ifp,
+			    const struct brcmf_event_msg *e, void *data)
+{
+	struct brcmf_cfg80211_vif *vif = ifp->vif;
+	u32 *packet_id = (u32 *)data;
+
+	brcmf_dbg(INFO, "Enter: event %s (%d), status=%d\n",
+		  brcmf_fweh_event_name(e->event_code), e->event_code,
+		  e->status);
+
+	if (!test_bit(BRCMF_MGMT_TX_SEND_FRAME, &vif->mgmt_tx_status) ||
+	    (*packet_id != vif->mgmt_tx_id))
+		return 0;
+
+	if (e->event_code == BRCMF_E_MGMT_FRAME_TXSTATUS) {
+		if (e->status == BRCMF_E_STATUS_SUCCESS)
+			set_bit(BRCMF_MGMT_TX_ACK, &vif->mgmt_tx_status);
+		else
+			set_bit(BRCMF_MGMT_TX_NOACK, &vif->mgmt_tx_status);
+	} else {
+		set_bit(BRCMF_MGMT_TX_OFF_CHAN_COMPLETED, &vif->mgmt_tx_status);
+	}
+
+	complete(&vif->mgmt_tx);
+	return 0;
+}
+
+static s32
+brcmf_notify_rssi_change_ind(struct brcmf_if *ifp,
+			     const struct brcmf_event_msg *e, void *data)
+{
+	struct brcmf_cfg80211_info *cfg = ifp->drvr->config;
+	struct brcmf_event_data_rssi *value = (struct brcmf_event_data_rssi *)data;
+	s32 rssi = 0;
+
+	brcmf_dbg(INFO, "Enter: event %s (%d), status=%d\n",
+		  brcmf_fweh_event_name(e->event_code), e->event_code,
+		  e->status);
+
+	if (!cfg->cqm_info.enable)
+		return 0;
+
+	rssi = le32_to_cpu(value->rssi);
+	brcmf_dbg(TRACE, "rssi: %d, threshold: %d, send event(%s)\n",
+		  rssi, cfg->cqm_info.rssi_threshold,
+		  rssi > cfg->cqm_info.rssi_threshold ? "HIGH" : "LOW");
+	cfg80211_cqm_rssi_notify(cfg_to_ndev(cfg),
+				 (rssi > cfg->cqm_info.rssi_threshold ?
+					NL80211_CQM_RSSI_THRESHOLD_EVENT_HIGH :
+					NL80211_CQM_RSSI_THRESHOLD_EVENT_LOW),
+				 rssi, GFP_KERNEL);
+
+	return 0;
+}
+
+static s32
+brcmf_notify_beacon_loss(struct brcmf_if *ifp,
+			 const struct brcmf_event_msg *e, void *data)
+{
+	struct brcmf_cfg80211_info *cfg = ifp->drvr->config;
+	struct brcmf_cfg80211_profile *profile = &ifp->vif->profile;
+	struct cfg80211_bss *bss;
+
+	brcmf_dbg(INFO, "Enter: event %s (%d), status=%d\n",
+		  brcmf_fweh_event_name(e->event_code), e->event_code,
+		  e->status);
+
+	if (!ifp->drvr->settings->roamoff)
+		return 0;
+
+	/* On beacon loss event, Supplicant triggers new scan request
+	 * with NL80211_SCAN_FLAG_FLUSH Flag set, but lost AP bss entry
+	 * still remained as it is held by cfg as associated. Unlinking this
+	 * current BSS from cfg cached bss list on beacon loss event here,
+	 * would allow supplicant to receive new scanned entries
+	 * without current bss and select new bss to trigger roam.
+	 */
+	bss = cfg80211_get_bss(cfg->wiphy, NULL, profile->bssid, NULL, 0,
+			       IEEE80211_BSS_TYPE_ANY, IEEE80211_PRIVACY_ANY);
+	if (bss) {
+		cfg80211_unlink_bss(cfg->wiphy, bss);
+		cfg80211_put_bss(cfg->wiphy, bss);
+	}
+
+	cfg80211_cqm_beacon_loss_notify(cfg_to_ndev(cfg), GFP_KERNEL);
+
+	return 0;
+}
+
 static void brcmf_init_conf(struct brcmf_cfg80211_conf *conf)
 {
 	conf->frag_threshold = (u32)-1;
@@ -6795,6 +6979,17 @@ static void brcmf_init_conf(struct brcmf_cfg80211_conf *conf)
 
 static void brcmf_register_event_handlers(struct brcmf_cfg80211_info *cfg)
 {
+	struct brcmf_if *ifp = netdev_priv(cfg_to_ndev(cfg));
+	struct brcmf_rssi_event_le rssi_event = {};
+	int err = 0;
+
+	/* get supported version from firmware side */
+	err = brcmf_fil_iovar_data_get(ifp, "rssi_event", &rssi_event,
+				       sizeof(rssi_event));
+	if (err)
+		brcmf_err("fail to get supported rssi_event version, err=%d\n",
+			  err);
+
 	brcmf_fweh_register(cfg->pub, BRCMF_E_LINK,
 			    brcmf_notify_connect_status);
 	brcmf_fweh_register(cfg->pub, BRCMF_E_DEAUTH_IND,
@@ -6829,7 +7024,28 @@ static void brcmf_register_event_handlers(struct brcmf_cfg80211_info *cfg)
 			    brcmf_p2p_notify_action_tx_complete);
 	brcmf_fweh_register(cfg->pub, BRCMF_E_PSK_SUP,
 			    brcmf_notify_connect_status);
-	brcmf_fweh_register(cfg->pub, BRCMF_E_RSSI, brcmf_notify_rssi);
+	if (rssi_event.version == BRCMF_RSSI_EVENT_IFX_VERSION)
+		brcmf_fweh_register(cfg->pub, BRCMF_E_RSSI,
+				    brcmf_notify_rssi_change_ind);
+	else
+		brcmf_fweh_register(cfg->pub, BRCMF_E_RSSI, brcmf_notify_rssi);
+	brcmf_fweh_register(cfg->pub, BRCMF_E_EXT_AUTH_REQ,
+			    brcmf_notify_ext_auth_request);
+	brcmf_fweh_register(cfg->pub, BRCMF_E_EXT_AUTH_FRAME_RX,
+			    brcmf_notify_auth_frame_rx);
+	brcmf_fweh_register(cfg->pub, BRCMF_E_MGMT_FRAME_TXSTATUS,
+			    brcmf_notify_mgmt_tx_status);
+	brcmf_fweh_register(cfg->pub, BRCMF_E_MGMT_FRAME_OFF_CHAN_COMPLETE,
+			    brcmf_notify_mgmt_tx_status);
+	brcmf_fweh_register(cfg->pub, BRCMF_E_BCNLOST_MSG,
+			    brcmf_notify_beacon_loss);
+
+	if (brcmf_feat_is_enabled(ifp, BRCMF_FEAT_TWT)) {
+		brcmf_fweh_register(cfg->pub, BRCMF_E_TWT_SETUP,
+				    brcmf_notify_twt_event);
+		brcmf_fweh_register(cfg->pub, BRCMF_E_TWT_TEARDOWN,
+				    brcmf_notify_twt_event);
+	}
 }
 
 static void brcmf_deinit_priv_mem(struct brcmf_cfg80211_info *cfg)
