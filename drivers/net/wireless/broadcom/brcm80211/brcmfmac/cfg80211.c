@@ -7715,6 +7715,7 @@ static int brcmf_setup_wiphybands(struct brcmf_cfg80211_info *cfg)
 	if (vhtmode) {
 		(void)brcmf_fil_iovar_int_get(ifp, "rxstreams", &rxstreams);
 		(void)brcmf_fil_iovar_int_get(ifp, "txstreams", &txstreams);
+		brcmf_dbg(INFO, "txstreams is %d, rxstreams is %d\n", txstreams, rxstreams);
 		(void)brcmf_fil_iovar_int_get(ifp, "txbf_bfe_cap",
 					      &txbf_bfe_cap);
 		(void)brcmf_fil_iovar_int_get(ifp, "txbf_bfr_cap",
