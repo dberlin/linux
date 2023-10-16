@@ -3968,7 +3968,7 @@ static struct brcmf_pno_net_info_le *
 brcmf_get_netinfo_array(struct brcmf_pno_scanresults_le *pfn_v1)
 {
 	struct brcmf_pno_scanresults_v2_le *pfn_v2;
-	struct brcmf_pno_net_info_le *netinfo;
+	struct brcmf_pno_net_info_le *netinfo = NULL;
 
 	switch (pfn_v1->version) {
 	default:
@@ -3994,7 +3994,7 @@ static struct brcmf_pno_net_info_v3_le *
 brcmf_get_netinfo_v3_array(struct brcmf_pno_scanresults_le *pfn_v1)
 {
 	struct brcmf_pno_scanresults_v2_le *pfn_v2;
-	struct brcmf_pno_net_info_v3_le *netinfo;
+	struct brcmf_pno_net_info_v3_le *netinfo = NULL;
 
 	switch (pfn_v1->version) {
 	default:
@@ -4072,7 +4072,10 @@ static s32 brcmf_notify_sched_scan_results(struct brcmf_if *ifp,
 	if (brcmf_feat_is_enabled(ifp, BRCMF_FEAT_PFN_V3)) {
 		struct brcmf_pno_net_info_v3_le *netinfo_v3, *netinfo_v3_start;
 		netinfo_v3_start = brcmf_get_netinfo_v3_array(pfn_result);
-
+		if (!netinfo_v3_start) {
+			bphy_err(drvr, "did not get netinfo_v3 data\n");
+			goto out_err;
+		}
 		datalen = e->datalen -
 			  ((void *)netinfo_v3_start - (void *)pfn_result);
 		if (datalen < result_count * sizeof(*netinfo_v3)) {
@@ -4112,6 +4115,10 @@ static s32 brcmf_notify_sched_scan_results(struct brcmf_if *ifp,
 		netinfo_start = brcmf_get_netinfo_array(pfn_result);
 		datalen = e->datalen -
 			  ((void *)netinfo_start - (void *)pfn_result);
+		if (!netinfo_start) {
+			bphy_err(drvr, "did not get netinfo data\n");
+			goto out_err;
+		}
 		if (datalen < result_count * sizeof(*netinfo)) {
 			bphy_err(drvr, "insufficient event data\n");
 			goto out_err;
