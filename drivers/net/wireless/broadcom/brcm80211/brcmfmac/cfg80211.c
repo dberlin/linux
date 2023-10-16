@@ -7453,27 +7453,30 @@ static void brcmf_get_bwcap(struct brcmf_if *ifp, u32 bw_cap[], bool has_6g)
 
 	band = WLC_BAND_2G;
 	err = brcmf_fil_iovar_int_get(ifp, "bw_cap", &band);
-	if (!err) {
-		bw_cap[NL80211_BAND_2GHZ] = band;
-		band = WLC_BAND_5G;
-		err = brcmf_fil_iovar_int_get(ifp, "bw_cap", &band);
-		if (!err) {
-			bw_cap[NL80211_BAND_5GHZ] = band;
-			return;
-			if (!has_6g)
-				return;
-			band = WLC_BAND_6G;
-			err = brcmf_fil_iovar_int_get(ifp, "bw_cap", &band);
-			if (!err) {
-				bw_cap[NL80211_BAND_6GHZ] = band;
-				return;
-			}
-			return;
-		}
-
-		WARN_ON(1);
+	if (err) {
+		goto fallback;
+	}
+	bw_cap[NL80211_BAND_2GHZ] = band;
+	band = WLC_BAND_5G;
+	err |= brcmf_fil_iovar_int_get(ifp, "bw_cap", &band);
+	if (err) {
+		goto fallback;
+	}
+	bw_cap[NL80211_BAND_5GHZ] = band;
+	if (!has_6g)
+		return;
+	band = WLC_BAND_6G;
+	err |= brcmf_fil_iovar_int_get(ifp, "bw_cap", &band);
+	/* Prior to the introduction of 6g, this function only
+	   did fallback in the case of 2g and 5g -failing.
+	   As mimo_bwcap does not have 6g bwcap info anyway,
+	   we keep that behavior.  */
+	if (err) {
 		return;
 	}
+	bw_cap[NL80211_BAND_6GHZ] = band;
+	return;
+	fallback:
 
 	brcmf_dbg(INFO, "fallback to mimo_bw_cap info\n");
 	mimo_bwcap = 0;
