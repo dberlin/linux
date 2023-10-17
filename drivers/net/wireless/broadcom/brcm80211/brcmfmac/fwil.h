@@ -12,6 +12,7 @@
 #define BRCMF_C_GET_VERSION			1
 #define BRCMF_C_UP				2
 #define BRCMF_C_DOWN				3
+#define BRCMF_C_SET_MSGLEVEL			8
 #define BRCMF_C_SET_PROMISC			10
 #define BRCMF_C_GET_RATE			12
 #define BRCMF_C_GET_INFRA			19

@@ -5830,6 +5830,123 @@ static int brcmf_cfg80211_del_pmk(struct wiphy *wiphy, struct net_device *dev,
 	return brcmf_set_pmk(ifp, NULL, 0);
 }
 
+static int brcmf_cfg80211_set_bitrate(struct wiphy *wiphy,
+				      struct net_device *ndev, unsigned int link_id,
+				      const u8 *addr,
+				      const struct cfg80211_bitrate_mask *mask)
+{
+	struct brcmf_if *ifp;
+	u32 he[2] = { 0, 0 };
+	u32 rspec = 0;
+	s32 ret = TIME_OK;
+	uint hegi;
+	u16 mcs_mask;
+	u8 band, mcs = 0;
+
+	ifp = netdev_priv(ndev);
+	ret = brcmf_fil_iovar_data_get(ifp, "he", he, sizeof(he));
+	if (unlikely(ret)) {
+		brcmf_dbg(INFO, "error reading he (%d)\n", ret);
+		return -EOPNOTSUPP;
+	}
+
+	if (!he[0]) {
+		brcmf_dbg(INFO, "Only HE supported\n");
+		return -EOPNOTSUPP;
+	}
+
+	for (band = 0; band < NUM_NL80211_BANDS; band++) {
+		if (band != NL80211_BAND_2GHZ && band != NL80211_BAND_5GHZ &&
+		    band != NL80211_BAND_6GHZ) {
+			continue;
+		}
+
+		/* Skip setting HE rates if legacy rate set is called from userspace.
+		 * Also if any one of 2.4, 5 or 6GHz is being called then other two will have
+		 * an invalid he mask of 0xFFF so skip setting he rates for other two bands.
+		 */
+		if (!mask->control[band].he_mcs[0] ||
+		    mask->control[band].he_mcs[0] == 0xFFF)
+			continue;
+
+		mcs_mask = mask->control[band].he_mcs[0];
+		mcs_mask = (mcs_mask ^ ((mcs_mask - 1) & mcs_mask));
+		if (mcs_mask != mask->control[band].he_mcs[0])
+			continue;
+
+		while (mcs_mask) {
+			mcs++;
+			mcs_mask >>= 1;
+		}
+
+		rspec = BRCMF_RSPEC_ENCODE_HE; /* 11ax HE */
+		rspec |=
+			(BRCMF_RSPEC_HE_NSS_UNSPECIFIED << BRCMF_RSPEC_HE_NSS_SHIFT) |
+			(mcs - 1);
+		/* set the other rspec fields */
+		hegi = mask->control[band].he_gi + 1;
+		rspec |= ((hegi != 0xFF) ? HE_GI_TO_RSPEC(hegi) : 0);
+
+		if (band == NL80211_BAND_2GHZ)
+			ret = brcmf_fil_iovar_data_set(ifp, "2g_rate",
+						       (char *)&rspec, 4);
+
+		if (band == NL80211_BAND_5GHZ)
+			ret = brcmf_fil_iovar_data_set(ifp, "5g_rate",
+						       (char *)&rspec, 4);
+
+		if (band == NL80211_BAND_6GHZ)
+			ret = brcmf_fil_iovar_data_set(ifp, "6g_rate",
+						       (char *)&rspec, 4);
+
+		if (unlikely(ret)) {
+			brcmf_dbg(INFO, "%s: set rate failed, retcode = %d\n",
+				  __func__, ret);
+			return ret;
+		}
+	}
+	return ret;
+}
+
+static int brcmf_cfg80211_set_cqm_rssi_config(struct wiphy *wiphy,
+					      struct net_device *dev,
+					      s32 rssi_thold, u32 rssi_hyst)
+{
+	struct brcmf_cfg80211_info *cfg = wiphy_to_cfg(wiphy);
+	struct brcmf_if *ifp;
+	struct brcmf_rssi_event rssi;
+	int err = 0;
+
+	ifp = netdev_priv(dev);
+	if (rssi_thold == cfg->cqm_info.rssi_threshold)
+		return err;
+
+	if (rssi_thold == 0) {
+		rssi.rate_limit_msec = cpu_to_le32(0);
+		rssi.num_rssi_levels = 0;
+		rssi.version = BRCMF_RSSI_EVENT_IFX_VERSION;
+	} else {
+		rssi.rate_limit_msec = cpu_to_le32(0);
+		rssi.num_rssi_levels = 3;
+		rssi.rssi_levels[0] = S8_MIN;
+		rssi.rssi_levels[1] = rssi_thold;
+		rssi.rssi_levels[2] = S8_MAX;
+		rssi.version = BRCMF_RSSI_EVENT_IFX_VERSION;
+	}
+
+	err = brcmf_fil_iovar_data_set(ifp, "rssi_event", &rssi, sizeof(rssi));
+	if (err < 0) {
+		brcmf_err("set rssi_event iovar failed (%d)\n", err);
+	} else {
+		cfg->cqm_info.enable = rssi_thold ? 1 : 0;
+		cfg->cqm_info.rssi_threshold = rssi_thold;
+	}
+
+	brcmf_dbg(TRACE, "enable = %d, rssi_threshold = %d\n",
+		  cfg->cqm_info.enable, cfg->cqm_info.rssi_threshold);
+	return err;
+}
+
 static struct cfg80211_ops brcmf_cfg80211_ops = {
 	.add_virtual_intf = brcmf_cfg80211_add_iface,
 	.del_virtual_intf = brcmf_cfg80211_del_iface,
@@ -5877,6 +5994,8 @@ static struct cfg80211_ops brcmf_cfg80211_ops = {
 	.update_connect_params = brcmf_cfg80211_update_conn_params,
 	.set_pmk = brcmf_cfg80211_set_pmk,
 	.del_pmk = brcmf_cfg80211_del_pmk,
+	.set_bitrate_mask = brcmf_cfg80211_set_bitrate,
+	.set_cqm_rssi_config = brcmf_cfg80211_set_cqm_rssi_config,
 };
 
 struct cfg80211_ops *brcmf_cfg80211_get_ops(struct brcmf_mp_device *settings)

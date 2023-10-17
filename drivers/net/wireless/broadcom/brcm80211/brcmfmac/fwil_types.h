@@ -1716,4 +1716,17 @@ struct brcmf_he_defcap {
 	u8 phy_cap[11];
 };
 
+#define MAX_RSSI_LEVELS			8
+#define BRCMF_RSSI_EVENT_BRCM_VERSION      0
+#define BRCMF_RSSI_EVENT_IFX_VERSION       1
+
+/** RSSI event notification configuration. */
+struct brcmf_rssi_event {
+	__le32 rate_limit_msec;
+	u8 num_rssi_levels;
+	s8 rssi_levels[MAX_RSSI_LEVELS];
+	u8 version;
+	s8 pad[2];
+};
+
 #endif /* FWIL_TYPES_H_ */
