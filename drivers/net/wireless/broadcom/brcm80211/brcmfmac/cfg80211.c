@@ -6937,14 +6937,23 @@ static s32 brcmf_dongle_roam(struct brcmf_if *ifp)
 		bphy_err(drvr, "roam_off error (%d)\n", err);
 		goto roam_setup_done;
 	}
-
-	roamtrigger[0] = cpu_to_le32(WL_ROAM_TRIGGER_LEVEL);
+	/* Turn off WBTEXT and use legacy roaming. */
+	brcmf_fil_iovar_int_set(ifp, "wnm_bsstrans_resp", 0);
+	brcmf_fil_iovar_int_set(ifp, "roam_env_detection", 0);
+	roamtrigger[0] = cpu_to_le32(WL_ROAM_TRIGGER_AUTO);
 	roamtrigger[1] = cpu_to_le32(BRCM_BAND_ALL);
 	err = brcmf_fil_cmd_data_set(ifp, BRCMF_C_SET_ROAM_TRIGGER,
 				     (void *)roamtrigger, sizeof(roamtrigger));
 	if (err)
 		bphy_err(drvr, "WLC_SET_ROAM_TRIGGER error (%d)\n", err);
 
+	brcmf_fil_cmd_int_set(ifp, BRCMF_C_SET_ROAM_SCAN_PRD, 10);
+	brcmf_fil_iovar_int_set(ifp, "fullroamperiod", 0x78);
+	brcmf_fil_iovar_int_set(ifp, "wnm", 0x505);  // BSSTRANS | MAXIDLE | NOTIF | ESTM
+	// brcmf_fil_iovar_int_set(ifp, "wnm", 0x5FB); // BRCM_WNM_FEATURE_SET
+
+	roam_delta[0] = cpu_to_le32(WL_ROAM_DELTA);
+	roam_delta[1] = cpu_to_le32(BRCM_BAND_ALL);
 	err = brcmf_fil_cmd_data_set(ifp, BRCMF_C_SET_ROAM_DELTA,
 				     (void *)roam_delta, sizeof(roam_delta));
 	if (err)

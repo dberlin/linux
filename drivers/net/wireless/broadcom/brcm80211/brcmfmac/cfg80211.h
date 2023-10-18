@@ -23,6 +23,7 @@
 #define WL_EXTRA_BUF_MAX		2048
 #define WL_ROAM_TRIGGER_LEVEL		-75
 #define WL_ROAM_DELTA			20
+#define WL_ROAM_TRIGGER_AUTO		3
 
 /* WME Access Category Indices (ACIs) */
 #define AC_BE			0	/* Best Effort */
