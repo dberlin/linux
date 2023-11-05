@@ -7165,8 +7165,8 @@ static s32 brcmf_dongle_roam(struct brcmf_if *ifp)
 
 	brcmf_fil_cmd_int_set(ifp, BRCMF_C_SET_ROAM_SCAN_PRD, 10);
 	brcmf_fil_iovar_int_set(ifp, "fullroamperiod", 0x78);
-	brcmf_fil_iovar_int_set(ifp, "wnm", 0x505);  // BSSTRANS | MAXIDLE | NOTIF | ESTM
-	// brcmf_fil_iovar_int_set(ifp, "wnm", 0x5FB); // BRCM_WNM_FEATURE_SET
+//	brcmf_fil_iovar_int_set(ifp, "wnm", 0x505);  // BSSTRANS | MAXIDLE | NOTIF | ESTM
+	 brcmf_fil_iovar_int_set(ifp, "wnm", 0x5FB); // BRCM_WNM_FEATURE_SET
 
 	roam_delta[0] = cpu_to_le32(WL_ROAM_DELTA);
 	roam_delta[1] = cpu_to_le32(BRCM_BAND_ALL);
