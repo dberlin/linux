@@ -519,5 +519,8 @@ s32 brcmf_notify_escan_complete(struct brcmf_cfg80211_info *cfg,
 void brcmf_set_mpc(struct brcmf_if *ndev, int mpc);
 void brcmf_abort_scanning(struct brcmf_cfg80211_info *cfg);
 void brcmf_cfg80211_free_netdev(struct net_device *ndev);
-
+s32 brcmf_extract_mgmt_frame_data(struct brcmf_if *ifp,
+				  const struct brcmf_event_msg *e,
+				  void *data, u16 *chanspec, u32 *mgmt_frame_len,
+				  u8 **mgmt_frame);
 #endif /* BRCMFMAC_CFG80211_H */

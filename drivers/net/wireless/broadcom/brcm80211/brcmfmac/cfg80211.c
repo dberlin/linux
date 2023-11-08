@@ -7082,6 +7082,49 @@ brcmf_notify_ext_auth_request(struct brcmf_if *ifp,
 	return err;
 }
 
+int brcmf_extract_mgmt_frame_data(struct brcmf_if *ifp,
+				  const struct brcmf_event_msg *e, void *data,
+				  u16 *chanspec, u32 *mgmt_frame_len,
+				  u8 **mgmt_frame)
+{
+	struct brcmf_rx_mgmt_data *rxframe = (struct brcmf_rx_mgmt_data *)data;
+	struct brcmf_rx_mgmt_data_v2 *rxframe_v2 =
+		(struct brcmf_rx_mgmt_data_v2 *)data;
+	struct brcmf_pub *drvr = ifp->drvr;
+	u16 version;
+
+	version = be16_to_cpu(rxframe->version);
+	if (version == 1) {
+		if (e->datalen < sizeof(*rxframe)) {
+			bphy_err(drvr, "Event %s (%d) data too small. Ignore\n",
+				 brcmf_fweh_event_name(e->event_code),
+				 e->event_code);
+			return -EINVAL;
+		}
+		*mgmt_frame_len =
+			e->datalen - sizeof(struct brcmf_rx_mgmt_data);
+		*mgmt_frame = (u8 *)(rxframe + 1);
+		*chanspec = be16_to_cpu(rxframe->chanspec);
+
+	} else if (version == 2) {
+		if (e->datalen < sizeof(*rxframe_v2)) {
+			bphy_err(drvr, "Event %s (%d) data too small. Ignore\n",
+				 brcmf_fweh_event_name(e->event_code),
+				 e->event_code);
+			return -EINVAL;
+		}
+		*mgmt_frame_len =
+			e->datalen - sizeof(struct brcmf_rx_mgmt_data_v2);
+
+		*mgmt_frame = (u8 *)(rxframe_v2 + 1);
+		*chanspec = be16_to_cpu(rxframe_v2->chanspec);
+	} else {
+		bphy_err(drvr, "Unsupported mgmt data version:%d\n", version);
+		return -EINVAL;
+	}
+	return 0;
+}
+
 static s32
 brcmf_notify_auth_frame_rx(struct brcmf_if *ifp,
 			   const struct brcmf_event_msg *e, void *data)
@@ -7089,26 +7132,25 @@ brcmf_notify_auth_frame_rx(struct brcmf_if *ifp,
 	struct brcmf_pub *drvr = ifp->drvr;
 	struct brcmf_cfg80211_info *cfg = drvr->config;
 	struct wireless_dev *wdev;
-	u32 mgmt_frame_len = e->datalen - sizeof(struct brcmf_rx_mgmt_data);
-	struct brcmf_rx_mgmt_data *rxframe = (struct brcmf_rx_mgmt_data *)data;
-	u8 *frame = (u8 *)(rxframe + 1);
+	u32 mgmt_frame_len;
+		u8 *frame;
 	struct brcmu_chan ch;
 	struct ieee80211_mgmt *mgmt_frame;
 	s32 freq;
+	u16 chanspec = 0;
+	s32 err;
 
 	brcmf_dbg(INFO, "Enter: event %s (%d) received\n",
 		  brcmf_fweh_event_name(e->event_code), e->event_code);
-
-	if (e->datalen < sizeof(*rxframe)) {
-		bphy_err(drvr, "Event %s (%d) data too small. Ignore\n",
-			 brcmf_fweh_event_name(e->event_code), e->event_code);
-		return -EINVAL;
+	err = brcmf_extract_mgmt_frame_data(ifp, e, data, &chanspec, &mgmt_frame_len, &frame);
+	if (err) {
+		bphy_err(drvr, "Error extracting management frame data:%d\n", err);
+		return err;
 	}
-
 	wdev = &ifp->vif->wdev;
 	WARN_ON(!wdev);
 
-	ch.chspec = be16_to_cpu(rxframe->chanspec);
+	ch.chspec = chanspec;
 	cfg->d11inf.decchspec(&ch);
 
 	mgmt_frame = kzalloc(mgmt_frame_len, GFP_KERNEL);

@@ -1391,9 +1391,8 @@ int brcmf_p2p_notify_action_frame_rx(struct brcmf_if *ifp,
 	struct brcmf_p2p_info *p2p = &cfg->p2p;
 	struct afx_hdl *afx_hdl = &p2p->afx_hdl;
 	struct wireless_dev *wdev;
-	u32 mgmt_frame_len = e->datalen - sizeof(struct brcmf_rx_mgmt_data);
-	struct brcmf_rx_mgmt_data *rxframe = (struct brcmf_rx_mgmt_data *)data;
-	u8 *frame = (u8 *)(rxframe + 1);
+	u32 mgmt_frame_len;
+	u8 *frame;
 	struct brcmf_p2p_pub_act_frame *act_frm;
 	struct brcmf_p2psd_gas_pub_act_frame *sd_act_frm;
 	struct brcmu_chan ch;
@@ -1401,13 +1400,18 @@ int brcmf_p2p_notify_action_frame_rx(struct brcmf_if *ifp,
 	s32 freq;
 	u16 mgmt_type;
 	u8 action;
+	u16 chanspec;
+	s32 err;
 
-	if (e->datalen < sizeof(*rxframe)) {
-		brcmf_dbg(SCAN, "Event data to small. Ignore\n");
-		return 0;
+	err = brcmf_extract_mgmt_frame_data(ifp, e, data, &chanspec,
+					    &mgmt_frame_len, &frame);
+	if (err) {
+		bphy_err(cfg, "Error extracting management frame data:%d\n",
+			 err);
+		return err;
 	}
 
-	ch.chspec = be16_to_cpu(rxframe->chanspec);
+	ch.chspec = chanspec;
 	cfg->d11inf.decchspec(&ch);
 	/* Check if wpa_supplicant has registered for this frame */
 	brcmf_dbg(INFO, "ifp->vif->mgmt_rx_reg %04x\n", ifp->vif->mgmt_rx_reg);
@@ -1938,22 +1942,26 @@ s32 brcmf_p2p_notify_rx_mgmt_p2p_probereq(struct brcmf_if *ifp,
 	struct brcmf_p2p_info *p2p = &cfg->p2p;
 	struct afx_hdl *afx_hdl = &p2p->afx_hdl;
 	struct brcmf_cfg80211_vif *vif = ifp->vif;
-	struct brcmf_rx_mgmt_data *rxframe = (struct brcmf_rx_mgmt_data *)data;
 	struct brcmu_chan ch;
 	u8 *mgmt_frame;
 	u32 mgmt_frame_len;
 	s32 freq;
 	u16 mgmt_type;
+	s32 err;
+	u16 chanspec;
 
 	brcmf_dbg(INFO, "Enter: event %d reason %d\n", e->event_code,
 		  e->reason);
 
-	if (e->datalen < sizeof(*rxframe)) {
-		brcmf_dbg(SCAN, "Event data to small. Ignore\n");
-		return 0;
+	err = brcmf_extract_mgmt_frame_data(ifp, e, data, &chanspec,
+					    &mgmt_frame_len, &mgmt_frame);
+	if (err) {
+		bphy_err(cfg, "Error extracting management frame data:%d\n",
+			 err);
+		return err;
 	}
 
-	ch.chspec = be16_to_cpu(rxframe->chanspec);
+	ch.chspec = chanspec;
 	cfg->d11inf.decchspec(&ch);
 
 	if (test_bit(BRCMF_P2P_STATUS_FINDING_COMMON_CHANNEL, &p2p->status) &&
@@ -1981,8 +1989,6 @@ s32 brcmf_p2p_notify_rx_mgmt_p2p_probereq(struct brcmf_if *ifp,
 	if ((vif->mgmt_rx_reg & BIT(mgmt_type)) == 0)
 		return 0;
 
-	mgmt_frame = (u8 *)(rxframe + 1);
-	mgmt_frame_len = e->datalen - sizeof(*rxframe);
 	freq = ieee80211_channel_to_frequency(ch.control_ch_num,
 					      ch.band == BRCMU_CHAN_BAND_2G ?
 					      NL80211_BAND_2GHZ :

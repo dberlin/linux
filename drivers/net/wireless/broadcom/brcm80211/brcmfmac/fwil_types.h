@@ -1014,6 +1014,18 @@ struct brcmf_rx_mgmt_data {
 	__be32	rate;
 };
 
+#define BRCMF_MAX_PHY_CORE_NUM 4
+struct brcmf_rx_mgmt_data_v2 {
+	__be16 version;
+	__be16 length;
+	__be16 chanspec;
+	__be16 pad;
+	__be32 rssi;
+	__be32 mactime;
+	__be32 rate;
+	char per_core_rssi[BRCMF_MAX_PHY_CORE_NUM];
+};
+
 /**
  * struct brcmf_fil_wowl_pattern_le - wowl pattern configuration struct.
  *
