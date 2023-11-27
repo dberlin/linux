@@ -7447,7 +7447,7 @@ brcmf_init_channel_info_provider(struct brcmf_cfg80211_info *cfg,
 					BRCMF_DCMD_MEDLEN);
 	if (err) {
 		bphy_err(drvr, "get chanspecs error (%d)\n", err);
-		goto done;
+		goto error;
 	}
 	/* Check the size of result vs structure size */
 	count = brcmf_channel_count_from_chan_info_list(prov);
@@ -7460,7 +7460,8 @@ brcmf_init_channel_info_provider(struct brcmf_cfg80211_info *cfg,
 	prov->get_channel_count = brcmf_channel_count_from_chanspec_list;
 	prov->get_channel_spec = brcmf_chanspec_from_chanspec_list;
 	prov->get_channel_info = brcmf_chaninfo_from_chanspec_list;
-done:
+	return 0;
+error:
 	kfree(prov->private.buf);
 	return err;
 }
