@@ -1,0 +1,1000 @@
+005e3ffe0bb9 Fix fallback path of brcmf_init_channel_info_provider
+aced4bfe65b0 Remove localversion
+c5a7c262058c [brcmfmac] Handle mgmt frame structure version 2.
+cea5281417e2 [brcmfmac] Set WNM feature set that broadcom supports
+cc9761b1cdd2 brcmfmac: TWT: Support Target Wake Time
+5fd16ab6b145 [brcmfmac] Use smaller roam delta
+3681e091e538 [brcmfmac] Use legacy roaming
+2b8c5da3fae1 [brcmfmac] Add cqm RSSI and bitrate cfg80211 support.
+4a6fc84a6e79 [brcmfmac] Add support for ethtool counters
+0a73ef7dda94 fixup! media: apple: isp: Minor changes to cam flow
+54b2e4242640 media: apple: isp: Support system sleep
+052c88cd1a57 media: apple: isp: Use a mutex instead of a spinlock for channels
+670a979a0fde media: apple: isp: implement ENUM_FRAMEINTERVALS trivially
+f80d96480263 media: apple: isp: Enable IMX364 sensor
+005810c318fa media: apple: isp: Show camera presets even for unsupported sensors
+430d88be6587 media: apple: isp: Parse firmware version from device tree
+9062b9b2d403 media: apple: isp: Use a more user-friendly device name
+addd218ad1a0 media: apple: isp: Option to use CMD_STOP (ifdeffed out)
+7f498396e7a3 media: apple: isp: Only reset coproc when necessary, fix minor race
+7fef6e6a41db media: apple: isp: VMap only what is necessary, remove redundant logging state bit
+e5acfdab4f34 media: apple: isp: Add a missing read barrier (possibly?)
+53bc383b97ef media: apple: isp: Clear IRQs when resetting coproc
+c3eed95362b8 media: apple: isp: Rework meta surface handling & buffer return
+bf18668810f3 media: apple: isp: Use cached IOMMU mappings
+6a5d1b1815cf media: apple: isp: Zero out pages allocated to ISP
+8aaf9861ede0 media: apple: isp: Make sub-pmdomain handling explicit
+aff6e6bb9348 media: apple: isp: Minor changes to cam flow
+b86f77d4513a media: apple: isp: Add flicker_sensor_set cmd
+a5791fd14107 media: apple: isp: t8112 fixes...
+c5241282477b media: apple: isp: Limit maximal number of buffers
+a55bc57a2e2b media: apple: isp: t8112 HW config
+6956b9a288b2 media: apple: isp: Use a second region for MBOX_IRQ_{DOORBELL,ACK}
+1233e8e5c6bd media: apple: isp: Make channel sends not interruptible
+1ad0b276db38 media: apple: isp: Maybe fix some DMA ordering issues
+9ad31b2db698 media: apple: isp: Add STOP and POWER_DOWN commands
+bc7263881be7 media: apple: isp: Implement posted commands
+6915f2e28544 media: apple: isp: Propagate EINTR from firmware loads
+df83701a9d92 media: apple: isp: Remove ioread/iowrite and stop doing raw address translation
+cbdda8aa684f media: apple: isp: Switch to threaded IRQs
+8c2a87c32439 media: apple: isp: Always enable singleplane API, make multiple a module param
+9464b5990b79 media: apple: isp: Working t602x and multiple formats and more fixes
+f91e5d9ab98f media: apple: isp: t602x hw config
+05664816fe4c media: apple: isp: Support >32bit VAs for t602x
+dbe770f8ac57 media: apple: isp: fix copyright
+efa5b35bc1e1 media: apple: isp: alloc static surfaces only once
+5d0b3eb87a64 media: apple: isp: misc isp-fw.c improvements
+fe862584937f media: apple: isp: rm old isp_resv struct
+222e08c8d684 media: apple: isp: rm unused bootargs members
+138ca58a37b2 media: apple: isp: s/asc/coproc/
+ef861d563841 media: apple: isp: wmb() before GPIO write
+c86d2a071445 media: apple: isp: Don't use define for bootargs size
+c107bc7c72be media: apple: isp: Better document info struct fields
+b80afd1ad651 media: apple: isp: Set platform_id in bootargs
+4e9a8be183ed media: apple: WIP: t6000 hax
+9b09219c7a85 media: apple: isp: Do not defer on failure to initialize DART
+64d6884ca28a media: apple: isp: Drop the DART mirroring stuff
+462a2d1f97df media: apple: isp: Split gpio/mbox MMIO range
+2f1c93d6ec1c media: apple: isp: Enable t6000
+171cc9b73c6d media: apple: isp: Fixup shared region arg
+6023384a66dd media: apple: isp: Use preallocated heap
+8a55a865be09 media: apple: isp: IMX558 initial support
+83f4037d5aa1 media: apple: Add Apple ISP driver
+6fa98de69cb2 MAINTAINERS: Add entries for Apple Z2 touchscreen driver
+09a43fff0557 input: apple_z2: Add a driver for Apple Z2 touchscreens
+208baac766c8 dt-bindings: input: touchscreen: Add Z2 controller bindings.
+d6f3502f5ed4 gpu: drm: adp: base the max framebuffer width and height on screen size
+f8ff117299a0 gpu: drm: adp: Refuse X* as client in open()
+45832b3f3a60 MAINTAINERS: Add entries for touchbar display driver
+2d837b335f78 gpu: drm: adp: Add a backlight driver for the Summit LCD
+54d8db8553b4 gpu: drm: adp: Add Apple Display Pipe driver
+f7e1a1582b60 arm64: Implement Apple IMPDEF TSO memory model control
+c14277a1746f arm64: Implement PR_{GET,SET}_MEM_MODEL for always-TSO CPUs
+c12b59781d81 prctl: Introduce PR_{SET,GET}_MEM_MODEL
+99df3e971979 arm64: Introduce scaffolding to add ACTLR_EL1 to thread state
+d67e2f269d52 drm/asahi: queue: Alocate the NotifierList as shared
+59eabef116b3 drm/asahi: workqueue: Work around ICE in Rust 1.74
+a69958299b78 driver, of: Mangle the device ID machinery further to remove const_trait_impl
+230494f5d9f5 rust: alloc: Rust 1.73 compat fixes
+a1d73c770533 drm/shmem-helper: Add lockdep asserts to vmap/vunmap
+30524409815f rust: bindgen: Exclude list functions with unsupported ABIs
+0798ae3a02e2 rust: Add missing impl_trait_in_assoc_type feature
+b95f6e8cc70e drm/asahi: initdata: New init chain API for rebase
+ef16e636f55c drm/asahi: render, buffer: Fix layered rendering on G13X (again)
+71904c7209d2 rust: Fix x86 build more
+feb27d78acde rust: Fix x86 build
+0a98c33c79ff drm/asahi: render: Fix layered rendering on G14X
+0da205a66162 drm/asahi: Fix Clippy complaints
+6a072f986820 drm/asahi: Identify and allocate clustered layering metadata buf
+2c2baa9e2c58 drm/asahi: Identify & add render VS spills flag
+f8fcdf290ffa Rust 1.72 compat
+f7313faf7a71 drm/asahi: buffer: Complain more loudly about sync requests
+4c81c5319d99 drm/asahi: render: Remove sync TVB growth support
+36fcfffa6b2e drm/asahi: file: Remove sync limit
+5e39f4a3a9f3 drm/asahi: Add verbose UAPI error reporting
+14ca4482630f drm/asahi: queue: Quieten some debugs
+2c396ab1039b drm/asahi: render: Identify and set Z/S strides for layered rendering
+c831b885194a drm/asahi: fw,queue: Implement helper programs
+2cab006c44b3 drm/asahi: render: Implement bindless samplers
+ed6d32009bfc drm/asahi: compute: Implement bindless samplers
+e7125aa1ec28 drm/asahi: buffer,render: Identify and provide layer meta buf
+2e21b79dac65 drm/asahi: workqueue: Tag GPU buf
+8979734c1c3e drm/asahi: render: Tag AuxFB
+775ba8f94cf2 drm/asahi: queue/compute: Tag preempt buf
+cca5efc73ae9 drm/asahi: initdata: Tag more arrays
+64b93a0589cb drm/asahi: buffer: Add tags to all the buffers
+a08f344f5589 drm/asahi: alloc: Use tag as the guard marker
+eb028f753245 drm/asahi: alloc: Support tagging array allocs
+14cdf93123e8 drm/asahi: Expose firmware version to userspace
+4d1db953ad37 drm/asahi: hw/t602x: Increase meta/preempt sizes for G14D
+af955d2cb0dd drm/asahi: gpu,hw: Fix array IOMappings
+e54f6f220fdb drm/asahi: initdata: Fudge t3 calculation a bit
+a380873023b5 drm/asahi: initdata,hw: Identify & set idle_off_standby_timer
+16ee5aee06ff drm/asahi: initdata: Fixes for G14D
+a3bde4bf2765 drm/asahi: Increase recursion limit
+b24a5d92e49d drm/asahi: Enable probing for t6022
+a9cdaf5bfcad drm/asahi: regs: Fix cluster count for G14D
+9fcfdef1bda6 drm/asahi: hw.t602x: Fixes for t6022
+4f66bdad0ff5 drm/asahi: fw.channels: Add static assertions for message sizes
+e7d5164f26cc drm/asahi: slotalloc: Allow initializing empty slots
+35fd2a995781 drm/asahi: initdata: Initialize GpuStatsFrag properly
+008e4f37e8ec drm/asahi: render: Correct some values for G14
+143977a0ed0f drm/asahi: hw/t8112: Make last IOMapping read-only
+782ab122f5f8 drm/asahi: hw/t600x: Expand some mappings
+aa5a8d411ccb drm/asahi: fw/microseq: Document bits of has_attachments
+a1049dfddab7 drm/asahi: initdata: Document more stuff
+c3b873f77f68 drm/asahi: initdata: Fix 13.5 field position for G13X
+0adc56877784 drm/asahi: fw/channels: Document more message types a bit
+5e159738563d drm/asahi: fw/channels: Identify subpipe (?) field in tvb ack
+ece0bd4d8ef8 drm/asahi: initdata: Fix ver_info for G13 V13.5
+f9836b5af300 drm/asahi: hw: Drop max_dies
+f0cb5dd5efb6 drm/asahi: hw,initdata: Initdata fixes for G14S
+0c305ffd511c drm/asahi: render: Implement unknown value UAPI extension
+3053bb4475e9 DO NOT MERGE: drm/asahi: Add an experimental UAPI extension
+aa85a6ed2312 drm/asahi: Add the Asahi driver for Apple AGX GPUs
+89ecfbc55cd0 rust: macros: Add versions macro
+7d0c0995280f rust: bindings: Bind the Asahi DRM UAPI
+96892fa3c5a6 drm/asahi: Add the Asahi driver UAPI
+f3eb00d9eff6 rust: drm: gem: Add set_exportable() method
+acf148affc91 drm/gem: Add a flag to control whether objects can be exported
+3faab5dab82e rust: drm: sched: Add GPU scheduler abstraction
+430822994ec1 rust: drm: syncobj: Add DRM Sync Object abstraction
+d7954ec2ef6a rust: drm: mm: Add DRM MM Range Allocator abstraction
+f4efd94fda22 rust: drm: gem: Allow pinning GEM object driver data
+a542794532d1 rust: drm: device: Convert Device to AlwaysRefCounted
+79c164933366 rust: drm: gem: shmem: Add DRM shmem helper abstraction
+15927b72924d drm/gem-shmem: Export VM ops functions
+966487524c44 rust: drm: gem: Allow pinning GEM object driver data
+3cf23cd7c323 rust: drm: device: Convert Device to AlwaysRefCounted
+9f7b1dff845e rust: drm: gem: Add GEM object abstraction
+544b499b8e24 rust: drm: device: Convert Device to AlwaysRefCounted
+299762785898 rust: drm: file: Add File abstraction
+967d93d12413 rust: drm: Add Device and Driver abstractions
+cdba4d87bbad rust: drm: ioctl: Add DRM ioctl abstraction
+d595f62599b6 rust: helpers: Add bindings/wrappers for dma_resv
+b6159e3b22ea rust: dma_fence: Add DMA Fence abstraction
+6fb8497230ac drm/scheduler: Fix UAF in drm_sched_fence_get_timeline_name
+5159ab7345cb drm/scheduler: Clean up jobs when the scheduler is torn down.
+a9fe1c3f22c2 rust: io_pgtable: Add the Apple UAT format abstraction
+bfa358453210 iommu/io-pgtable: Hack in FW-RW/GPU-RO mode into UAT io_pgtable
+b219e1e0cc7c iommu/io-pgtable: Add Apple UAT variant format
+9190ac450ead *RFL import: kernel::KParamGuard & friends
+290e7eebad60 rust: Allow feature allocator_api
+079f4f1d4beb rust: bindings: Add resource_size wrapper
+e1c32df4a435 *RFL import: Rest of kernel::error::code::*
+90c7a8209bbf *RFL import: macros::module params functionality & deps
+d32b147f9e1b rust: Add ioremap_np support to io_mem & friends
+bcc0eb2e51a3 rust: kernel: platform: Add Device.set_dma_masks()
+0a11b947e129 rust: platform: add `ioremap_resource` and `get_resource` methods
+75cb8b051da9 rust: driver,of: Support passing ID tables to modpost for alias generation
+60d971a25efa rust: of: Add OF node abstraction
+a18794df144e *RFL import: kernel::delay
+d4c1ce105924 *RFL import: kernel::platform
+4954ad9ca609 *RFL import: kernel::of
+a18f3cbbb36f *RFL import: kernel::io_mem
+747c822320ba *RFL import: The rest of kernel::device (minus clk stuff)
+67fab9fa1b58 *RFL import: kernel::driver
+04415308fbae rust: Add `name` argument to Module::init()
+26f734aaea31 rust: module_param: Tolerate a trailing newline when parsing
+3196af90c344 *RFL import: kernel::module_param
+6a2a49d0be1d rust: Enable const_mut_refs feature for the kernel crate
+6f9c19026089 MISSING SIGNOFFS: rust: Add PAGE_SIZE constant to kernel crate
+1374090cd471 *RFL import: kernel::user_ptr
+53b5e8e8e46c *RFL import: kernel::io_buffer
+0e1c9defb526 *RFL import: kernel::types::Bool
+5e111912e838 rust: Fix container_of!()
+b4494970f243 rust: Add `container_of` and `offset_of` macros
+94d1d68a8439 rust: soc: apple: rtkit: Add Apple RTKit abstraction
+ee7e7c26b00d rust: io_pgtable: Add io_pgtable abstraction
+1b1df2fc9442 rust: device: Add an abstraction for devices
+1a25b924e1e1 rust: Add a Sealed trait
+8a8ea1a16dc5 rust: xarray: Add an abstraction for XArray
+66cf56dcdae0 rust: time: New module for timekeeping functions
+4db4de551f66 rust: sync: arc: Add lockdep integration
+e409337edb36 rust: sync: Add LockdepMap abstraction
+1305aa1021e3 rust: init: Update documentation for new mutex init style
+ff4f69daa423 rust: sync: Classless Lock::new() and pin_init()
+19a55084c6d8 rust: sync: Implement dynamic lockdep class creation
+e2a2dfd53e11 rust: sync: Replace static LockClassKey refs with a pointer wrapper
+d4bedd0a1af4 rust: sync: Add dummy LockClassKey implementation for !CONFIG_LOCKDEP
+a62e6bfcd4ca rust: kernel: Add simple siphash abstraction
+4eebf2117593 rust: Use absolute paths to build Rust objects
+e21eead3bfc8 rust: types: Add Opaque::zeroed()
+1c007313c1f6 rust: kernel: str: Implement Debug for CString
+156b88b4331e rust: init: Support type paths in pin_init!() and friends
+a400fd6f00b5 rust: init: Implement Zeroable::zeroed()
+4843a329426c rust: kernel: lock: Add Lock::pin_init()
+d872ed19523d rust: Enable type_alias_impl_trait
+f4be3be4ff9e rust: Fix bindgen on arm64
+fbcd7df4abc2 arm64: rust: Disable neon and fp target features.
+ecffb60407b4 arm64: rust: Enable PAC support for Rust.
+f641c3780a40 arm64: rust: Enable Rust support for AArch64
+478035f94951 rust: helpers: Fix spinlock helper for various spinlock modes
+cf893d8d7aeb drm: apple: dptx: Log connect/disconnect calls
+cc5d2342e3f3 drm: apple: Extract modeset crtc's atomic_flush()
+bd992c0015ad drm: apple: iomfb: Improve hotplug related logging
+28428c4b7219 drm: apple: HPD: Only act on connect IRQs
+63c34f5dd217 drm: apple: dptx: Wait for completion of dptx_connect.
+618ce025a194 drm: apple: Disconnect dptx When the CRTC is powered down
+1c08e0e7d0ae drm: apple: dptx: Implement APCALL_DEACTIVATE and reset the phy
+b36b7f67a171 Revert "drm: apple: iomfb: Do not match/create PMU service for dcpext"
+0e9201e17d93 drm: apple: Keep information at which swap_id fb are still referenced
+bb44f317df96 drm: apple: Implement D592 callback
+f26e22e9eb3d drm: apple: afk: Update read pointer before processing message
+bfab11c5de3b drm: apple: HACK: Do not delete piodma platform device
+5694343cb3ae drm/apple: Add missing sound Kconfig dependencies
+76116db26c2b fixup! drm/apple: Add support for the macOS 13.2 DCP firmware
+3acade65d8d2 drm: apple: dptxep: Implement drive settings stuff
+899b56e0c36d drm: apple: dptxep: Fix reply size check
+881a4448cabe drm: apple: Fix missing unlock path in dcp_dptx_connect
+05bf8771d475 drm: apple: afk: Clear commands before sending them
+6ba7b0e7ae64 drm: apple: dptx: Adapt dptxport_connect() to observed behavior
+c0b399680050 drm: apple: dptx: Add DPTX_APCALL_ACTIVATE
+02a85d750a0d drm: apple: dptx: Add set_active_lanes APCALL
+9f35ee909756 drm: apple: dptx: port interface to macOS 13.5 firmware
+1b4e2cd86da4 drm: apple: dptx: Port APCALL to macOS 13.3 firmware
+a7fae0f5a451 drm: apple: afk: Adapt to macOS 13.3 firmware
+5f215f3fa6aa drm: apple: iomfb: Do not match/create PMU service for dcpext
+ddcd558124d9 drm: apple: Move offsets for rt_bandwidth callback to DT
+c290966647a7 drm: apple: Add DPTX support
+b2c5c0330d37 drm: apple: afk: Use linear array of services
+4bdb54203c7e drm: apple: DCP AFK/EPIC support
+24aac1649778 gpu: drm: apple: Add sound mode parsing
+e4ed38ca1a46 gpu: drm: apple: Add 'parse_blob'
+93d6e789a02e gpu: drm: apple: Add utility functions for matching on dict keys
+1fe63b3f34d6 mux: apple dp crossbar: Support t602x DP cross bar variant
+4d8b2a33e839 mux: apple dp crossbar: Read UNK_TUNABLE before and after writing it
+06cce1d1fa8d mux: apple dp crossbar: FIFO_RD_UNK_EN seems to use 2 bits per dispext*
+00373753e394 mux: apple dp crossbar: Support t8112 varient
+393fbfb80738 mux: apple DP xbar: Add Apple silicon DisplayPort crossbar
+4b1347209fa8 drm: apple: Remove explicit asc-dram-mask handling
+15d210d57904 drm: apple: iomfb: Increase modeset tiemout to 8.5 seconds
+be2d75671c16 drm: apple: iomfb: implement abort_swaps_dcp
+3f0b5cd29e4c drm: apple: dcp: Remove cargo-culted devm_of_platform_populate
+3b1a1f286ea4 drm: apple: dcp: Port over to DEFINE_SIMPLE_DEV_PM_OPS
+7b029b63b520 drm: apple: Update supported firmware versions to 12.3 and 13.5
+1cef5461b7f1 drm: apple: Add D129 allocate_bandwidth iomfb callback
+ef143f79b34f drm: apple: Align PIODMA buffers to SZ_16K
+ab3bb9e73c7b drm/apple: Use iommu domain for piodma maps
+7c7f68e82d86 drm/apple: Get rid of the piodma dummy driver
+58e9f5357d6a drm: apple: backlight: avoid updating the brightness with a commit
+53f0d6c0d3fb drm: apple: iomfb: limit backlight updates to integrated panels
+e2ca3e60f8e3 drm: apple: Only match backlight service on DCP with panel
+014f62ac8e9b drm: apple: iomfb: Increase modeset timeout to 2.5 seconds
+e2b71ca2f0f0 drm/apple: Mark DCP as being in the wakeup path
+189cd4abb7d0 drm/apple: Remove simpledrm framebuffer before DRM device alloc
+245d255e9557 drm/probe_helper: fix the warning reported when calling drm_kms_helper_poll_disable during suspend
+5b8d4cf73252 WIP: drm/apple: Port to incompatible V13.3 firmware interface
+ce57eebdbdfd dcp: Warn if DMA mapping fails
+faa1c8b047e5 dcp: T602X bwreq support
+42f83285cd43 dcp: 42-bit DMA masks
+9a9c1983da6f dcp: Add get_tiling_state
+c534bd126e3d dcp: Allow unused trampolines
+edac7eb930e1 drm/apple: Drop unsupported DRM_FORMAT_ARGB2101010
+d49e93383812 drm/apple: Support color transformation matrices
+6f9a94b86cfb drm/apple: ignore surf[3] in clear swap calls
+5f068c6f98f4 drm/apple: Add support for the macOS 13.2 DCP firmware
+aa17283cbcfd drm/apple: Add callbacks triggered by last_client_close_dcp()
+b400563e0321 drm/apple: purge unused dcp_update_notify_clients_dcp
+21fb90614b4c drm/apple: Align buffers to 16K page size
+f187134776cc drm/apple: Move panel options to its own sub-struct
+a197219db95f drm/apple: Use backlight_get_brightness()
+ddd13d6907b3 drm/apple: Set backlight level indirectly if no mode is set
+2e9444c16a9c drm/apple: Fix bad error return
+9de0e1fcb539 drm/apple: Fix parse_string() memory leaks
+34293f1cdb08 drm/apple: simplify IOMFB_THUNK_INOUT
+0636ff995105 gpu: drm: apple: Wait for iomfb initialization
+d2a20b781fe9 gpu: drm: apple: Use components to avoid deferred probing
+101c65e48102 drm/apple: Allocate drm objects according to drm's expectations
+035371cb40fb drm/apple: Use drm_module_platform_driver
+434fed73fab6 gpu: drm: apple: Use drm_aperture_remove_conflicting_framebuffers
+57ebbb45137b drm/apple: Update swap handling
+4474ffac067e gpu: drm: apple: Clear all surfaces on startup
+fd02cec37f7b drm/apple: Enable 10-bit mode & set colorspace to native
+8a888c903814 Revert "gpu: drm: apple: reenable support for {A,X}RGB2101010"
+19b073ebcd92 gpu: drm: apple: Add show_notch module parameter
+ba8ef0a32813 gpu: drm: apple: reenable support for {A,X}RGB2101010
+b23c6ffa25a2 gpu: drm: apple: Add IOMobileFramebufferAP::get_color_remap_mode
+602f14834c13 gpu: drm: apple: Prefer SDR color modes
+0b2395ab0296 gpu: drm: apple: Add tracing for color and timing modes
+6c3aa328a421 gpu: drm: apple: Skip parsing elements of virtual timing modes
+561b90d31f6d gpu: drm: apple: Parse color modes completely
+f698da6b0a2f drm/apple: Disable fake vblank IRQ machinery
+728fae3d7b41 drm/apple: Check if DCP firmware is supported
+cce7be90bc6a drm/apple: Report "PMUS.Temperature" only for mini-LED backlights
+1b4561758a14 drm/apple: Schedule backlight update on enable_backlight_message_ap_gated
+9ccfa30d1af8 drm/asahi: Fix backlight restores on non-microLED devices
+a7fd76bd3a36 drm/apple: Remove obsolete ignore_swap_complete
+e19a09125ce9 drm/apple: Wait for power on request to complete synchronously
+76ae25d431db drm/apple: Read display dimensions from devicetree
+36f465b24ff8 drm/apple: Implement drm_crtc_helper_funcs.mode_fixup
+5e7c84a89a6d drm/apple: Add trace point for display brightness
+5e4d7858e1db drm/apple: register backlight device after IOMFB start
+6be73d87e578 gpu: drm: apple: Avoid drm_fb_dma_get_gem_addr
+9269a2af417d drm/apple: Fix suspend/resume handling
+afa8c0e4afd2 HACK: gpu: drm: apple: j314/j316: Ignore 120 Hz mode for integrated display
+93528801b6f8 gpu: drm: apple: Brightness control via atomic commits
+2a36574c7896 gpu: drm: apple: "match" PMU/backlight services on init
+2313e360a01a gpu: drm: apple: iomfb: Unify call and callback channels
+68f2e77f4008 gpu: drm: apple: iomfb: Use FIELD_{GET,PREP}
+1f795a194992 gpu: drm: apple: Update date last update
+b24ccf8b8885 gpu: drm: apple: Prevent NULL pointer in dcp_hotplug
+99594c1ef1e6 gpu: drm: apple: Set maximal framebuffer size correctly
+09d58c2bcd99 gpu: drm: apple: Fix shutdown of partially probed dcp
+50762b088d0e gpu: drm: apple: Provide notch-less modes
+2203e5aeb04b gpu: drm: apple: Support opaque pixel formats
+f13d28683aa6 gpu: drm: apple: Remove other framebuffers before DRM setup
+0f6e47705faa gpu: drm: apple: Specify correct number of DCP*s for drm_vblank_init
+aa795187872e gpu: drm: apple: Fix DCP initialisation
+87633b92a279 gpu: drm: apple: Fix DCP run time PM
+26c2d7253ad3 gpu: drm: apple: Add dcp_crtc_atomic_check
+007427d12d4d gpu: drm: apple: Send an disconnected hotplug event on ASC crash
+758d14c13163 gpu: drm: apple: Convert 2 non-assert WARN()s to dev_err()
+a450a5eada96 gpu: drm: apple: Reject modes without valid color mode
+0dc75909ea13 gpu: drm: apple: Add apple_drm_gem_dumb_create()
+397c756a33bd gpu: drm: apple: Add support for DRM_FORMAT_XRGB2101010
+d2b77e7b7ed9 gpu: drm: apple: Unbreak multiple DCP plane <-> crtc matching
+49cce5096c64 gpu: drm: apple: Start using tracepoints
+524b7ff68e45 drm: apple: Replace atomic refcount with kref
+abe9949d19af drm: apple: Fix connector state on devices with integrated display
+c4e15d017133 gpu: drm: apple: Use connector types from devicetree
+830c53afce81 WIP: add header test target copied from i915
+43eb7441367e drm/apple: Split dcpep/iomfb out of dcp.c
+96bdd6645908 drm/apple: make note about drm.mode_config.max_width/height
+03f349ea6100 drm/apple: Mark the connecter on init only with modes as connected
+6f27ce8c170e drm/apple: Allow modesets even when disconnected
+50db0031be25 drm/apple: Fix kzalloc in dcp_flush()
+d5fcc86a8adb drm/apple: laod piodma dev via explicit phandle
+72ce3a4fca40 WIP: drm/apple: Change the way to clear unused surfaces
+d1805aa52af3 drm/apple: Support memory unmapping/freeing
+bfc0dd8f6a22 drm/apple: clear callback's output data
+88b02c9de6ba drm/apple: implement read_edt_data
+6de3d6045674 drm/apple: Add less tons of questionable debug prints
+9e080ac0e175 drm/apple: Add somewhat useful debug prints
+8059e5bf1a3f drm/apple: toggle power only when active state changes
+67b4edb80b1e drm/apple: Add t600x support
+ec75319029a4 drm/apple: Clear used callback/cookie on dcp_ack
+8f7a053eea00 drm/apple: Add DCP interface definitions used on t600x
+6863c8c9d407 drm/apple: Log callbacks with their tag as debug output
+0bdca2352293 drm/apple: Switch to nonblocking commit handling
+45399bdfbbe9 drm/apple: dcp: fix TRAMPOLINE_IN macro
+32e88015808d drm/apple: Implement suspend/resume for DCP
+4088900589e7 drm/apple: Use "apple,asc-dram-mask" for rtkit iovas
+814895782eb5 drm/apple: Reference only swapped out framebuffers
+bb7d05b02da8 drm/apple: Add nop sr_set_uint_prop callback for t600x-dcp
+9686abf9098d drm/apple: Fix rt_bandwidth for t600x
+b63f7cc5ed7d drm/apple: Use a device tree defined clock for dcpep_cb_get_frequency
+aed511ce6af6 HACK: drm/apple: avoid DCP swaps without attached surfaces
+5ad9861fe0ef drm/apple: Start coprocessor on probe
+285b65880e3d drm: apple: Relicense DCP driver as dual MIT / GPL v2.0
+913adb77c1bf WIP: drm/apple: Add DCP display driver
+dedc6f630226 fixup! phy: apple: Add DP TX phy driver
+d08c494d5fe1 phy: apple: atc: support mode switches in atcphy_dpphy_set_mode()
+d45e58130aaf HACK: phy: apple: atc: Ignore fake submodes
+fcde18098c41 phy: apple: atc: Support 'set_lanes' in DP mode
+aea8dd01b0fa phy: apple: atc: Support DisplayPort only operation
+38112cc2f0e2 phy: apple: atc: Reorder ACIOPHY_CROSSBAR and ACIOPHY_MISC ops
+6002353e465d phy: apple: atc: Split atcphy_dp_configure_lane()
+68cfa1689b4c phy: apple: Add DP TX phy driver
+7443d06acb9b usb: typec: tipd: Clear interrupts first
+e9fd19c8869d WIP: phy: apple: Add Apple Type-C PHY
+5d6133076f7d nvmem: round up to word_size
+a8d8a852c8fc nvmem: allow bit offset > 8
+0b0b1ed5b040 xhci-pci: asmedia: Add a firmware loader for ASM2214a chips
+5d0587569e73 usb: renesas-xhci: Build loader into the main xhci-pci module
+36df2026540e PCI: apple: Do not power down devices on port setup
+a62debf7abff PCI: apple: Log the time it takes for links to come up
+336aef25cc88 PCI: apple: Reorder & improve link-up logic
+1167d590fc7f PCI: apple: Make link up timeout configurable, default to 500ms
+9b97c163385e PCI: apple: Skip controller port setup for online links
+f9ac777394dc PCIE: apple: Add T602x PCIe support
+3104029251ba PCI: apple: Drop poll for CORE_RC_PHYIF_STAT_REFCLK
+7c51237a7d93 PCI: apple: Move port PHY registers to their own reg items
+9f025c5f30e7 PCI: apple: Set only available ports up
+93579afe25aa PCI: apple: Fix missing OF node reference in apple_pcie_setup_port
+638676ad3ef1 PCI: apple: Add support for optional PWREN GPIO
+ed6cc0bf260e PCI: apple: Probe all GPIOs for availability first
+f8bf9ab155eb PCI: apple: Use gpiod_set_value_cansleep in probe flow
+efe5817cd68d dt-bindings: pci: apple,pcie: Add subnode binding, pwren-gpios property
+24512692ab95 cpufreq: apple-soc: Drop setting the PS2 field on M2+
+3935cbfefbf6 nvmem: Add spmi-mfd-nvmem driver
+118f8df304a2 mfd: Add a simple-mfd-spmi driver
+10df84a06a06 spmi: add a first basic spmi driver for Apple SoC
+cdb583f963b6 power: supply: macsmc_power: Add CHWA charge thresholds
+db5df5837f1f power: supply: macsmc_power: Log power data on button presses
+3867d219446f macsmc: Fix race between backend and core on notifications
+e4295147346a power: supply: macsmc_power: Add a debug mode to print power usage
+56782ced7574 platform/apple: smc: Add apple_smc_read_f32_scaled
+2c4e72330408 power: supply: macsmc_power: Add critical level shutdown & misc events
+a665a8b81152 Input: macsmc-hid: Support the power button on desktops
+65188f51fd25 gpio: macsmc: Add IRQ support
+000f1ce15874 Input: macsmc-hid: Support button/lid wakeups
+8fade5bf217e Input: macsmc-hid: New driver to handle the Apple Mac SMC buttons/lid
+d257d860ceeb rtc: Add new rtc-macsmc driver for Apple Silicon Macs
+7164dd5dd052 power: reset: macsmc-reboot: Add driver for rebooting via Apple SMC
+84225e07e865 power: supply: macsmc_power: Add AC power supply
+4505df045406 power: supply: macsmc_power: Turn off OBC flags if macOS left them on
+ef18b958b21e power: supply: macsmc_power: Use BUIC instead of BRSC for charge
+3646d95d5022 power: supply: macsmc_power: Add more props, rework others
+443fee4203f7 power: supply: macsmc_power: Add present prop
+fad05df7a5d7 power: supply: macsmc_power: Add cycle count and health props
+f7eba70ea5f2 power: supply: macsmc_power: Driver for Apple SMC power/battery stats
+340b95fd0e0e gpio: Add new gpio-macsmc driver for Apple Macs
+c9ee365c4f88 platform/apple: Add new Apple Mac SMC driver
+ab34e25afb46 soc: apple: rtkit: Get rid of apple_rtkit_send_message_wait
+01f51cc54de7 lib/vsprintf: Add support for generic FOURCCs by extending %p4cc
+8cab5c99a2ca Bluetooth: hci_bcm4377: Fix msgid release
+4b9204a2f911 Bluetooth: hci_bcm4377: Increase boot timeout
+a578c48d0b28 Bluetooth: hci_bcm4377: Add BCM4388 support
+29e4baae1f0b HID: magicmouse: Handle touch controller resets on SPI devices
+0392a6a70c80 HID: Bump maximum report size to 16384
+36ae7897e092 HID: transport: spi: Add suspend support
+638cde1bfa76 HID: magicmouse: Add .reset_resume for SPI trackpads
+1d7118b7f2f2 HID: transport: spi: Check status message after transmits
+f9aea862dc80 soc: apple: Add RTKit helper driver
+fcd48cddf411 hid: Add Apple DockChannel HID transport driver
+e7af204efe38 soc: apple: Add DockChannel driver
+741dbc6ba306 hid: magicmouse: Add MTP multi-touch device support
+3225344e8b7c hid: apple: Bind to HOST devices for MTP
+5ea6cfbf0c62 HID: core: Handle HOST bus type when announcing devices
+e5bbb60302e1 HID: add HOST vendor/device IDs for Apple MTP devices
+689e01fd305b WIP: HID: transport: spi: add Apple SPI transport
+e2d6138162e7 HID: magicmouse: add support for Macbook trackpads
+987b967a3307 HID: magicmouse: use ops function pointers for input functionality
+48ec15c18572 HID: magicmouse: use struct input_mt_pos for X/Y
+915826e5f132 HID: magicmouse: use a define of the max number of touch contacts
+6c4c01ec918f HID: apple: add Fn key mapping for Macbook Pro with touchbar
+9cfdc824742a HID: apple: add Fn key mapping for Apple silicon MacBooks
+4de4a49e1e68 HID: apple: add support for internal keyboards
+c9dc6c4422a3 HID: add device IDs for Apple SPI HID devices
+b165555378e9 [brcmfmac]: Fix error handling in brcmf_enable_bw40_2g
+c7a9db61ba9c [brcmfmac] Clean up and common interface creation handling
+017208ca045d [brcmfmac] Support bandwidth caps for all bands
+fcb20a515a22 [brcmfmac] Support chan_info_list
+00d2abb2db00 [brcmfmac] Add support for more rate info in station dumps
+16c75cf30976 [brcmfmac] Set chanspec during join.
+3fcb0753397b [brcmfmac] Add support for more auth suites in roaming offload
+095e2f8aded8 [brcmfmac] Let feature attachment fail, and fail if we can't handle the interface versions we find.
+4926f2421d6a [brcmfmac] Support new join parameter structure versions
+2e4380afcdc8 [brcmfmac] Structurize scan parameter handling
+f17da29c70da [brcmfmac] Structurize PNF scan and add support for latest version
+2d1170d8bf17 fixup! define missing event message extension
+2b867cbaf6c7 fixup! fix FWIL definition to use SSID length constant
+cd7cfebf7e2f [brcmfmac] Fix regulatory domain handling to reset bands properly
+e7a12a257947 [brcmfmac] Add support for 6G bands and HE
+b1c388f41ab8 [brcmfmac] Support high power/low power/etc scan flags
+7cf327b6b94f [brcmfmac] Don't issue wrong insufficient headroom warning
+a7607bdc40fd [brcmfmac] Support GCMP cipher suite, used by WPA3.
+1538a5168a32 [brcmfmac] Compute number of available antennas and set it in wiphy structure.
+7621a194bfae [brcmfmac] Dynamically configure VHT settings to match firmware
+4134b6f3b713 [brcmfmac] Add support for encoding/decoding 6g chanspecs
+0a6b8375eef4 [brcmfmac] Finish firmware mem map, fix heap start calculation bug.
+17f6552552eb brcmfmac: Fix AP mode
+078b5f477cac wifi: brcmfmac: Add BCM4388 support
+20a36a498c66 wifi: brcmfmac: Extend brcmf_wsec_pmk_le
+46673f7f4fb8 wifi: brcmfmac: Support bss_info up to v112
+5e5e560ebe7d wifi: brcmfmac: Implement event_msgs_ext
+e789f3c3a097 wifi: brcmfmac: Add support for SCAN_V3
+a166543e6b7d wifi: brcmfmac: Mask all IRQs before starting firmware
+80ccb59b8cff wifi: brcmfmac: Do not set reset vector when signatures are in use
+3429c132cd48 wifi: brcmfmac: pcie: Initialize IRQs before firmware boot
+dd0f82d03e77 wifi: brcmfmac: pcie: Access pcie core registers via dedicated window
+ece2e2b83e3a wifi: brcmfmac: Handle watchdog properly in newer cores
+49854ee0101c wifi: brcmfmac: chip: ca7: Only disable D11 cores; handle an arbitrary number
+0519d7c6d4e9 wifi: brcmfmac: Increase bandlist size
+e17b6414ea83 wifi: brcmfmac: msgbuf: Increase RX ring sizes to 2048
+48f98665d38f wifi: brcmfmac: Add support for firmware signatures
+4143992c824d wifi: brcmfmac: Add support for SYSMEM corerev >= 12 & fix < 12
+f7728d5e1305 wifi: brcmfmac: Do not service msgbuf IRQs until ready in MSI mode
+3127482111b5 wifi: brcmfmac: Shut up p2p unknown frame error
+f7b312cf96cf wifi: brcmfmac: Support exchanging power mailbox messages via commonring
+b6305d7c27ec wifi: brcmfmac: Implement the H2D/D2H mailbox data commonring messages
+2fa510934489 wifi: brcmfmac: Add a new bus op for D2H mailbox message handling
+bf05fff2c8ad wifi: brcmfmac: Add newer msgbuf packet types up to 0x2e
+ddf7548db5e3 wifi: brcmfmac: Support v6+ flags and set host_cap properly
+5c8cc10b505e wifi: brcmfmac: Fix logic for deciding which doorbell registers to use
+0e1c5ad2645f wifi: brcmfmac: Handle PCIe MSI properly
+02c9f8c255c3 wifi: brcmfmac: Add missing shared area defines to pcie.c
+46b5f099e462 brcmflac: cfg80211: Use WSEC to set SAE password
+2743da29ac47 ASoC: tas2770: Set the SDOUT polarity correctly
+1d426b63c587 ASoC: tas2764: Set the SDOUT polarity correctly
+8e19908da01e macaudio: Officially enable j313 speakers
+b4b3ab352823 macaudio: Skip speaker sense PCM if no sense or no speakers
+ac80f92dc64b macaudio: Remove -3dB safety pad from j313
+efd5fbcc17a8 ASoC: tas2770: Fix volume scale
+3929502da4a0 ASoC: tas2770: Support setting the PDM TX slot
+a29183f800b8 ASoC: tas2770: Add zero-fill and pull-down controls
+5f855764ae43 ASoC: tas2770: Power cycle amp on ISENSE/VSENSE change
+1bee15218893 ASoC: tas2770: Add SDZ regulator
+0e815db32917 macaudio: Rework platform config & add all remaining platforms
+88a224f47636 ASoC: tas2764: Enable some Apple quirks by default
+e12df4cd7034 dmaengine: apple-admac: Keep upper bits of REG_BUS_WIDTH
+938b42874c00 ASoC: tas2764: Wait for ramp-down after shutdown
+d98e9be72bfe ALSA: dmaengine: Always terminate DMA when a PCM is closed
+ea8056da5487 ASoC: apple: mca: Increase reset timeout
+f26dca3dc2bb ASoC: tas2764: Fix power control mask
+63679c614c64 ASoC: tas2764: Mark SW_RESET as volatile
+45929e2c90be ASoC: tas2764: Add reg defaults for TAS2764_INT_CLK_CFG
+ac6e5491025f macaudio: Use an explicit mutex for the speaker volume lock
+488435edba5b ASoC: tas2764: Add SDZ regulator
+1719304868a4 ASoC: tas2764: Power up/down amp on mute ops
+2e0ecd557409 ASoC: tas2764: Enable main IRQs
+0053646525c2 macaudio: Disable debug
+93fb0b4f82b3 macaudio: Use the same volume limit for all amps
+235ca88e02f2 macaudio: Initialize speaker lock properly
+aff1e53bfb6d macaudio: Enable VSENSE switches
+9b5c30934eea macaudio: Allow DT enabled speakers and gate them off in the driver
+ce9bed2564b4 ASoC: apple: mca: Do not mark clocks in use for non-providers
+b40800fedd9f macaudio: Add a getter for the interlock
+43a1e544d685 alsa: pcm: Remove the qos request only if active
+82a0ee9c561d macaudio: speaker volume safety interlocks
+efbe193f89b3 ASoC: ops: Export snd_soc_control_matches()
+b36557b4330a ASoC: macaudio: Sense improvements
+a9e9f1da3aa9 ASoC: macaudio: Fix PD link double-frees?
+128fa6430317 ASoC: macaudio: Do not disable ISENSE/VSENSE switches on j314
+bf72529691c4 ASoC: tas2764: Add optional 'Apple quirks'
+2e6866b37c99 ASoC: macaudio: Add 'Speakers Up Indicator' control
+70dacb982457 ASoC: macaudio: Remove stale 'speaker_nchans' fields
+6899b829812b ASoC: tas2764: Crop SDOUT zero-out mask based on BCLK ratio
+3ef6e08aecb1 ASoC: tas2764: Export 'die_temp' to sysfs
+16672b83dade ASoC: tas2770: Export 'die_temp' to sysfs
+dfceef8e14e6 ASoC: tas2764: Raise regmap range maximum
+97bf2200b3d4 WIP: ASoC: tas2764: Apply unknown Apple quirk
+cea73d4cebf3 ASoC: tas2764: Configure zeroing of SDOUT slots
+4e25c377a4b8 ASoC: apple: mca: Support capture on multiples BEs
+b78b3c7c1ac5 ASoC: macaudio: Tune constraining of FEs, add BCLK
+06563e6d3e3c NOT UPSTREAMABLE: ASoC: tas2764: Redo I/V sense logic
+b36fda6fcd02 ASoC: tas2764: Reinit cache on part reset
+29c1150209e3 ASoC: tas2770: Fix and redo I/V sense TDM slot setting logic
+49a144a00d71 ASoC: tas2770: Factor out set_ivsense_slots
+5d678c6c47ad ASoC: macaudio: Do not constrain sense PCM
+abbc6763a535 ASoC: macaudio: Tweak "no audio route" message
+d5abc50f2a4e ASoC: macaudio: Start speaker sense capture support
+afdc5094d9bb ASoC: apple: mca: Fix SYNCGEN enable on FE clock consumers
+0805531b13aa ASoC: apple: mca: Support FEs being clock consumers
+1b0f4042ec96 ASoC: apple: mca: Factor out mca_be_get_fe
+87b25fed7563 ASoC: apple: mca: Separate data & clock port setup
+d57cfec61f5c ASoC: macaudio: Tune DT parsing error messages
+681a231ba18d ASoC: macaudio: Condition selecting NCO driver on COMMON_CLK
+dcca5ef8f27b ALSA: control: Add kcontrol callbacks for lock/unlock
+b8c67f307973 ASoC: cs42l84: Fix capture gain range & add TLVs
+344c1f559ff2 ASoC: macaudio: alias j415 kcontrols to j314
+f52a7a6d162e ASoC: apple: mca: Move clock shutdown to be shutdown
+c379441ccac7 ASoC: cs42l42: Set a faster digital ramp-up rate
+cf09eff72e55 ASoC: cs42l84: Do not enable the PLL before the clocks are ready
+2d8efd3fdcaf ASoC: macaudio: constrain frontend channel counts
+02db6aedbc8e ASoC: macaudio: Add initial j313 fixup_controls
+d4627c8733b4 ASoC: cs42l84: Report volume updates correctly
+602a40bc8905 ASoC: cs42l84: Enable regcache (initially)
+39be70d814fd ASoC: macaudio: Improve message on opening of unrouted PCM devices
+0991f0ae3133 ASoC: apple: mca: Constrain channels according to TDM mask
+204baabeda5a ASoC: cs42l84: Put the volume control in shape
+dc177c84a019 ASoC: cs42l84: Adjust mic-detection voltage threshold
+cb86ccc56446 ASoC: cs42l84: There's no line-in on the jack
+63da007a8fbe ASoC: macaudio: Alias f413 fixups to j314
+cdc277444070 ASoC: macaudio: Gate off experimental platforms
+520087550c41 ASoC: macaudio: s/void_warranty/please_blow_up_my_speakers/
+c2c28a6123c1 ASoC: macaudio: s/Freq/Frequency/ in TAS2764 control
+9c34fe8d0583 ASoC: macaudio: Drop the 'inverse jack' speaker stuff
+bf0d88bd88b5 ASoC: macaudio: Rename ALSA driver to simple 'macaudio'
+71a944f02eaa ASoC: macaudio: Add j493 fixup_controls
+15fa2528e47b ASoC: macaudio: Add j375 fixup_controls
+efc1b7f924ca ASoC: dapm: Export new 'graph.dot' file in debugfs
+b2f1427315c5 ASoC: macaudio: Fix headset routes
+c8486935ac4e wip: ASoC: cs42l84: Start new codec driver
+ca7c1f5d5415 dt-bindings: sound: Add CS42L84 codec
+2a6354599a7c ASoC: cs42l42: Do not advertise sample bit symmetry
+9209455304c0 ASoC: cs42l42: Fix typo
+9cf8ce50f323 ASoC: apple: Add macaudio machine driver
+3f2b7c92ffdd dt-bindings: sound: Add Apple Macs sound peripherals
+0995ebda7a32 ASoC: card: Let 'fixup_controls' return errors
+239debcd5bcc ASoC: ops: Introduce 'soc_set_enum_kctl'
+1c5a7b7b71fe ASoC: ops: Introduce 'snd_soc_deactivate_kctl'
+9ea9df667b12 ASoC: ops: Accept patterns in snd_soc_limit_volume
+37e8026ea8f9 ASoC: ops: Enforce platform maximum on initial value
+2d1be7eccb4f ASoC: ops: Move guts out of snd_soc_limit_volume
+4ae2b3205672 ASoC: tas2764: Add control concerning overcurrent events
+9359a44c9a22 ASoC: tas2764: Extend driver to SN012776
+c09cd5f75afd Revert "ASoC: ops: Don't modify the driver's plaform_max when reading state"
+aee2ab09efc9 spi: apple: Add driver for Apple SPI controller
+f507577d1922 dt-bindings: spi: apple,spi: Add binding for Apple SPI controllers
+c578b63ad857 apple-nvme: Support coprocessors left idle
+d8e3a384ade2 apple-nvme: Release power domains when probe fails
+a9c56d190ea9 apple-nvme: defer cache flushes by a specified amount
+9463fe55a9ca usb: dwc3: Add support for Apple DWC3
+08ce2ba6356a dt-bindings: usb: Add Apple dwc3 bindings
+2f54a4c90ba2 x86/insn_decoder_test: allow longer symbol-names
+e0a490b46e84 drm/simpledrm: Set DMA and coherency mask
+3eafaf9c6be7 regmap: Ensure range selector registers are updated after cache sync
+3e3d9c7f79e2 drm/simpledrm: Add support for multiple "power-domains"
+72a5dfb65ff7 iommu: Only allocate FQ domains for IOMMUs that support them
+3e092e9c78f8 watchdog: apple: Support suspend and resume
+3543447b6b80 HACK: Lol libwebrtc
+20ad08bf2034 soc: apple: apple-pmgr-pwrstate: Mark on-at-boot PDs as wakeup
+3ef91b603246 tty: serial: samsung_tty: Mark as wakeup_path on no_console_suspend
+a5a5a9639095 soc: apple: apple-pmgr-pwrstate: Mark on-at-boot PDs as DEFER_OFF
+0da6e5e871a8 PM: domains: Add a flag to defer power-off until all consumers probe
+0238f2982e74 driver core: fw_devlink: Add fw_devlink_count_absent_consumers()
+5596f63824a6 init/Kconfig: Only block on RANDSTRUCT for RUST
+22fbdbf19983 i2c: pasemi: Log bus reset causes
+a696051ce047 i2c: pasemi: Enable the unjam machine
+9956f3dacecc Add 'asahi' localversion to 05-asahi.localversion
+585ac1e9f3bd usb: typec: tipd: Be more verbose about errors
+dc88397d5a7a i2c: pasemi: Improve timeout handling and error recovery
+bb38a0217f90 firmware_loader: Add /lib/firmware/vendor path
+c5c8087130a2 drm/simpledrm: Make backlight support a Kconfig option
+349fcb0f2f82 PCI: apple: Add depends on ARM64_PAGE_SHIFT = 14
+cd4a291a72a3 mmc: sdhci-pci: Support setting CD debounce delay
+5ce0fd69ec49 mmc: sdhci-pci: Support external CD GPIO on all OF systems
+63ec6df06f5d of: Demote "Bad cell count" to debug message
+05435f32f4f9 drm/simpledrm: Add backlight support
+733cfe7bca98 tty: serial: samsung_tty: Support runtime PM
+446c55102b94 fixup! iommu: Fix breakage when second IOMMU defers probe
+3fa18935ca55 iommu: Fix breakage when second IOMMU defers probe
+2917970f2736 iommu: apple-dart: Power on device when handling IRQs
+a9ce853cb68b iommu: apple-dart: Allow mismatched bypass support
+93d85a9dca42 iommu: apple-dart: Increase MAX_DARTS_PER_DEVICE to 3
+0bb24ddc150d iommu: apple-dart: Support specifying the DMA aperture in the DT
+b5a9d6b7ef32 iommu: apple-dart: Add 4-level page table support
+9933eadbcfba iommu: apple-dart: Make the hw register fields u32s
+de7ca92b8459 iommu: apple-dart: Clear stream error indicator bits for T8110 DARTs
+3b0e64af70f3 iommu: io-pgtable: Add 4-level page table support
+01a2eae1b2ed iommu: apple-dart: Enable runtime PM
+59c351b2615f iommu: apple-dart: Link to consumers with blanket RPM_ACTIVE
+ab4ec64bc506 iommu: apple-dart: Install IOMMU_RESV_TRANSLATED mappings
+3762cef5a1f7 iommu/dart: Assert !locked when reconfiguring
+9c8ea703e538 iommu/dart: Require DMA or unmanaged domain for locked DARTs
+e079a716edae iommu/dart: Set DMA domain for locked DARTs
+c9cb72f839f2 iommu/dart: Factor out apple_dart* expression
+2f3c07f01abb iommu: apple-dart: Don't attempt to reset/restore locked DARTs
+06b88ee1143b iommu/dart: Allow locked DARTs to probe
+81ae24962d29 iommu/dart: Track if the DART is locked
+17a63d46a850 iommu: Parse translated reserved regions
+f7164402a8dc iommu: Add IOMMU_RESV_TRANSLATED for non 1:1 mapped reserved regions
+d3884bf81cb9 iommu/io-pgtable: dart: Remove unused __dart_alloc_pages() paramater
+6e58b1c720c3 iommu: Mark dev_iommu_priv_set() with a lockdep
+ad7eb7e05656 iommu: Mark dev_iommu_get() with lockdep
+64807e383980 iommu: Add ops->of_xlate_fwspec()
+f6d987134169 iommu: Remove pointless iommu_fwspec_free()
+ecaa6c57d145 iommu: Remove dev_iommu_fwspec_set()
+ad8afe0bfccc iommu: Make iommu_ops_from_fwnode() static
+ca9b59d46b37 iommu: Hold iommu_probe_device_lock while calling ops->of_xlate
+a3de72cac2ee acpi: Do not use dev->iommu within acpi_iommu_configure()
+2107dc3d05b9 iommu: Add iommu_fwspec_append_ids()
+18592473fd6a iommu/of: Do not use dev->iommu within of_iommu_configure()
+8171c59485f5 iommu: Add iommu_probe_device_fwspec()
+55214fe82f82 iommu: Add iommu_fwspec_alloc/dealloc()
+6350848a2bd9 iommu: Make iommu_fwspec->ids a distinct allocation
+908ae03dfcab acpi: Do not return struct iommu_ops from acpi_iommu_configure_id()
+6d01930481d9 iommu/of: Use -ENODEV consistently in of_iommu_configure()
+e29aaeecf627 iommmu/of: Do not return struct iommu_ops from of_iommu_configure()
+970bdfd595ca iommu: Remove struct iommu_ops *iommu from arch_setup_dma_ops()
+ec8dd3304898 soc: apple: pmgr: Add externally-clocked property
+1c99d905b71c soc: apple: pmgr: Add force-disable/force-reset
+8f1826ff9fcd dt-bindings: power: apple,pmgr-pwrstate: Add force-{disable,reset}
+00b8eeebdd3f soc: apple: rtkit: Add devm_apple_rtkit_free()
+0783882c9306 cpuidle: apple: Add Apple SoC cpuidle driver
+1368ac7b0929 soc: apple: Add driver for Apple PMGR misc controls
+d74c92aa3147 soc: apple: rtkit: Implement OSLog buffers properly
+8d765b6dcac5 soc: apple: Drop !APPLE_MAILBOX dependency
+b033f65fdf1e mailbox: apple: Delete driver
+c32991fa729a soc: apple: rtkit: Port to the internal mailbox driver
+200fee2722a5 soc: apple: mailbox: Add ASC/M3 mailbox driver
+6d772dec1b12 soc: apple: rtkit: Add APPLE_RTKIT_PWR_STATE_INIT
+aad2cf2d09fd soc: apple: rtkit: Log failed buffer requests
+30f29de41f73 soc: apple: rtkit: Log failure to send messages
+ad085f3dd438 soc: apple: rtkit: Check for failure to send mgmt messages & log
+1d3f3c626441 MAINTAINERS: Add apple-spi driver & binding files
+18952dfe4d93 MAINTAINERS: Add Apple dwc3 bindings to ARM/APPLE
+757d5630a903 arm64: dts: apple: Fill device node for dp2hdmi on Macbook Pros
+ccb5e9d9fd32 arm64: dts: apple: t6022-{j180,j475}: Enable dcpext0/dptx-phy/dp2hdmi
+6daeb2d2a591 arm64: dts: apple: t6020-j474,t6021-j475: Enable dcp/dptx-phy/dp2hdmi
+0e8dd063d34c arm64: dts: apple: t8112-j473: Enable dcp/dptx-phy/dp2hdmi
+7ca4c2501d8d arm64: dts: apple: t602x: Add device nodes for atc DP crossbar
+68553847bbb2 arm64: dts: apple: t600x: Add device nodes for atc DP crossbar
+4deaa6326d14 arm64: dts: apple: t602x: Add lpdptx-phy node
+fc2a0a48bcc8 arm64: dts: apple: t8112: Add dptx-phy node
+15b5e32e7b74 arm64: dts: apple: t602x: Add t6020 dispext device nodes
+48d5fde62cd5 arm64: dts: apple: t600x: Add t6000 dispext device nodes
+2d92772fc0de arm64: dts: apple: t8112: Add dcpext/dispext0 nodes
+059d773bbb4e arm64: dts: apple: t8103: Add dcpext/dispext0 nodes
+d3fd10ab7250 arm64: dts: apple: t602x: Add "apple,min-state" to ps_dispextN_cpu0
+72131a5b577a arm64: dts: apple: t600x: Add "apple,min-state" to ps_dispextN_cpu0
+742b1b95a5a8 arm64: dts: apple: t8112: Switch to apple,dma-range
+07aff7898107 arm64: dts: apple: t8103: Switch to apple,dma-range
+54cf96da9c5b arm64: dts: apple: t600x: Switch to apple,dma-range
+892b9f406fd9 arm64: dts: apple: Disable ps_isp_sys unless it is used
+92e2a3583457 arm64: dts: apple: add opp-microwatt to t8103/t600x
+7bb0b5936b9b arm64: dts: apple: j313: Model SDZ GPIO as a regulator
+389cf00d1754 arm64: dts: apple: j293: Model SDZ GPIO as a regulator
+775eadb4f370 arm64: dts: apple: describe shared SDZ GPIO for tas2764
+7d58aa3046ce arm64: dts: apple: j493: Enable speakers
+c764ea2f5b10 arm64: dts: apple: j313: Enable speakers
+424019c74d89 arm64: dts: apple: j293: Enable speakers
+27a5252d95c7 arm64: dts: apple: j375 & friends: Enable speakers
+f78be03f3ffc arm64: dts: apple: t600x-j314-j316: Set sound compatibles per device
+3e7652e1d054 arm64: dts: apple: j413: Model SDZ GPIO as a regulator
+5310bb690516 arm64: dts: apple: j493: Add missing speaker amp IRQs
+56d1767fbcb0 arm64: dts: apple: j415: Add missing speaker amp IRQs
+c3451214d224 arm64: dts: apple: j413: Add missing speaker amp IRQs
+d2f60b73cadd arm64: dts: apple: j313: Add missing speaker amp IRQs
+758f61d3989d arm64: dts: apple: j293: Add missing speaker amp IRQs
+9a660aada8db arm64: dts: apple: j375: Add missing speaker amp IRQs
+c792da8fa239 arm64: dts: apple: j415: Enable speakers
+4a00def610cc arm64: dts: apple: j413: Enable speakers
+929075d37fe0 arm64: dts: apple: j314/j316: Enable speakers
+6fd8f92fbbaf arm64: dts: apple: t8103-j313: Add I/VMON slots to amps
+70101b89e967 arm64: dts: apple: t8103-j293: Add I/VMON slots to amps
+0866316438da arm64: dts: apple: t8112-j493: Add I/VMON slots to amps
+24bdabf6d889 arm64: dts: apple: t8112-j473: Add I/VMON slots to amp
+d12963478aa5 arm64: dts: apple: t8112-j415: Add I/VMON slots to amps
+94eda3aeb727 arm64: dts: apple: t8112-j413: Add I/VMON slots to amps
+a5c5e1313d7e arm64: dts: apple: t600x-j180d: Add I/VMON slots to amps
+abc171863605 arm64: dts: apple: t600x-j375: Add I/VMON slots to amp
+670f588e1d00 arm64: dts: apple: t8112: Mark MCA power states as externally-clocked
+656632cff4a8 arm64: dts: apple: t8103: Mark MCA power states as externally-clocked
+f7934fcd8149 arm64: dts: apple: t602x: Mark MCA power states as externally-clocked
+d5ec66d332b0 arm64: dts: apple: t600x: Mark MCA power states as externally-clocked
+60da74c9d689 arm64: dts: apple: t600x-j314-j316: Zero out unused speaker sense slots
+4c06376be0fb arm64: dts: apple: t600x-j314-j316: Add speaker I/V sense slots
+c5a5ca61b02a arm64: dts: apple: t8103-j274: Add speaker I/V sense slots
+1572c3b43220 arm64: dts: apple: imx558: Add downscaled resolution presets
+a9dba1e74c4e arm64: dts: apple: imx248: Add scaled and cropped presets
+c59efb318380 arm64: dts: ISP platform configs
+dff8d9009b65 arm64: dts: apple: t602x: Add ISP nodes
+4cf81cf3ea1f arm64: dts: apple: t8112: Add ISP nodes
+0ff90ae90a17 arm64: dts: apple: t6000: Add ISP nodes
+d1e9305850fd arm64: dts: apple: t8103: Add ISP nodes
+ba8be6992069 arm64: dts: apple: t8112: Add nvram alias
+b395cbf16fdf arm64: dts: apple: t8103: Add nvram alias
+c3a210c95cd7 arm64: dts: apple: t6022-j180.dtsi: Add spi nor flash and nvram partition
+519310f5ad1e arm64: dts: apple: t600x-j375.dtsi: Add spi nor flash and nvram partition
+8749d0055c30 arm64: dts: apple: t8112: add opp-microwatt props to avalanche/blizzard
+466232a0d6d7 arm64: dts: apple: t6020x: Mark dptx_phy_ps only on laptops always-on
+4be7a77ba814 arm64: dts: apple: t8112-j473: Add dptx-phy power-domain
+96901d5effe0 arm64: dts: apple: t602x: Add initial Mac Studio (2023) device trees
+2650ca9bb9d8 arm64: dts: apple: t6020-j474s: Disable dcp until lpdpphy is supported
+80cf10643b22 arm64: dts: apple: t6022: Disable dcp thouroughly
+e049233ef60b arm64: dts: apple: Share USB-C port node on t6022 devices
+677514133852 arm64: dts: apple: t8112-j473: Set GPU base pstate
+99d4e8e4f6f8 arm64: dts: apple: Add devicetree for Macbook Air (15-inch, M2, 2023)
+25df9cd00d81 arm64: dts: apple: t8112: Add touchbar digitizer node
+bc92bf458a7c arm64: dts: apple: t8103: Add touchbar bindings
+41434397725b arm64: dts: apple: Add touchbar display nodes for t8112-j493
+fdf6545e5284 arm64: dts: apple: t8103: Add touchbar screen bindings
+75c7eb2e7e78 arm64: dts: apple: t6022: Add APCIE-GE nodes
+37103e5c4893 arm64: dts: apple: Add j180d (Mac Pro 2023) device tree
+57c14f879287 arm64: dts: apple: Add initial t6022 support
+32490c1fc27a arm64: dts: apple: t600x-j375.dtsi: Add missing etherhet0 alias
+7c130d32be1d arm64: dts: apple: Add T602x GPU node
+4517d061d66c arm64: dts: apple: t8112: Enable turbo CPU p-states
+081eb058df15 arm64: dts: apple: t8103: Enable turbo CPU p-states
+f6b58e6d01e5 arm64: dts: apple: t600x: Enable turbo CPU p-states
+38aba1021f31 arm64: dts: apple: Make ps_msg always-on
+3a06f2e3c3d5 arm64: dts: apple: t600x: Remove obsolete comment in ans2 power domain
+c929c72279f6 arm64: dts: apple: Add pmgr-misc nodes to t60xx
+e9fd10318b21 DO NOT SUBMIT: arm64: dts: apple: t6020-j474s: Add unused PCIe port01
+4e0834e999c9 arm64: dts: apple: Add identity dma-ranges mapping
+3a7ff5bfdf9b arm64: dts: apple: Add MTP nodes to t6020x
+1399d586abdf arm64: dts: apple: Add initial t602x device trees
+19195907552f arm64: dts: apple: Fix t600x mca IRQs
+38f4dd4b5300 arm64: dts: apple: Add keyboard alias & layout props for t8112 laptops
+9568d8471df8 arm64: dts: apple: j314/j316: Disable ATC3_USB_AON power domain
+bbe61054c7a7 arm64: dts: apple: t8112: Add "ps_disp0_cpu0" as resets for dcp
+ae8911e04fd8 arm64: dts: apple: t8103: Add "ps_disp0_cpu0" as resets for dcp
+e5b3b4f15c58 arm64: dts: apple: t600x: Add "ps_disp0_cpu0" as resets for dcp
+e91e5fc8e83e arm64: dts: apple: t8103: Add missing ps_pmp dependency to ps_gfx
+25d055713520 arm64: dts: apple: t8112: Add DCP power domain to missing devices
+7c6518f079f5 arm64: dts: apple: t8103: Add DCP power domain to missing devices
+e34039725e52 arm64: dts: apple: t600x: Add DCP power domain to missing devices
+8899ad24e1f8 arm64: dts: apple: t8103: Add the NVRAM bindings
+1042397871fe arm64: dts: apple: t8112: Add the NVRAM bindings
+b62dfd71acc7 arm64: dts: apple: t600x: Add the NVRAM bindings
+d15eb652f18b arch: arm64: apple: Add spi1-nvram.dtsi
+d11351d6d140 arm64: dts: apple: Add GPU firmware versions to t8113/t600x
+5fb2282bc240 arm64: dts: apple: Add GPU nodes to T8112
+5e53dd0b3f6b arm64: dts: apple: Add no-map to GPU reserved-memory nodes
+b201a733a1c0 arm64: dts: t8103: Add GPU leak coefficients
+946f3bc8187b arm64: dts: Add t600x GPU nodes
+909311fa0cdc arm64: dts: Add power data for t8103
+89a7e69f1be0 arm64: dts: Add GPU performance data to t8103.dts
+48c8439cbc6e arm64: dts: apple: t8103*: Add GPU nodes
+b4ed787b1324 scripts/dtc: Add support for floating-point literals
+bf49c9b276a4 arm64: dts: apple: t8112: Add dcp/disp0 nodes
+032705105d7c arm64: dts: apple: t8112: Add ATCPHY nodes
+8e7cfb8e979f arm64: dts: apple: t8112: Add eFuses node
+36f93ed2adf4 arch: arm64: apple: Add dcp panel node for t600x based laptops
+3f4aa5b584e5 arch: arm64: apple: Add dcp panel node for t8103 based laptops and imacs
+a29ee6dd1389 arch: arm64: dts: apple: t600x: Add ATCPHY nodes
+82b18e71be35 arch: arm64: dts: apple: t6000: Add eFuses node
+c580b8e457e8 arm64: dts: apple: t8103: Add ATCPHY node
+52e955166b7b arm64: dts: apple: t8103: Add eFuses node
+54fa2f43ac08 arch: arm64: apple: t600x: Add connector type property for DCP*
+ab36059ecd9b arch: arm64: apple: t8103: Add connector type property for DCP*
+4c124a0a7ecc arch: arm64: apple: t600x: Add display controller related device tree nodes
+16fed3b05a9a arch: arm64: apple: Add display controller related device tree nodes
+32cb14deee25 arch: arm64: apple: t600x: Mark USB and PCIe as "dma-coherent"
+db3bda864552 arch: arm64: apple: Add missing power state deps for display
+8b50b25bbcb8 arm64: dts: apple: t6001-j375c: Add USB3 hub GPIO initialization
+5ab7733d2031 arm64: dts: apple: Drop 'integrated audio' from sound models
+1d72b1ca716d arm64: dts: apple: t600x-jxxx: Put in audio nodes
+00fa0119d344 arm64: dts: apple: t8103*: Put in audio nodes
+ec82eaa10377 arm64: dts: apple: t600x: Add bluetooth device trees
+816284892d7d arm64: dts: apple: t8103: Fix spi4 power domain sort order
+67602b17a8c4 arm64: dts: apple: Add PCI power enable GPIOs
+51f6783e1fe0 arm64: dts: apple: Add WiFi module and antenna properties
+9a10a2af0065 arm64: dts: apple: t600x: Add dwc3 nodes
+d09f88ab5327 arm64: dts: apple: j31[46]: Add keyboard nodes
+78d382ea7fa7 arm64: dts: apple: t600x: Add spi3 node
+8678f1638014 arm64: dts: apple: t600x-j314-j316: Add NOR flash node
+8397933413d2 arm64: dts: apple: t6000: Add spi1 node
+1e21cd937665 arm64: dts: apple: Add PMU NVMEM and SMC RTC/reboot nodes
+6230766c964d arm64: dts: apple: Add SMC node to t600x devicetrees
+dd3ccea41ebf arm64: dts: apple: Keep PCIe power domain on
+bd998a87b89e arm64: dts: apple: Mark ATC USB AON domains as always-on
+53e8ff7bac61 arm64: dts: apple: Add PMU NVMEM and SMC RTC/reboot nodes
+eb161de84692 arm64: dts: apple: Add SMC node to t8103/t6001 devicetrees
+07998268625f arm64: dts: apple: Add PCI power enable GPIOs
+334a1bf10b3b arm64: dts: apple: t8103: Add spi3/keyboard nodes
+3fc1ad7a6879 arm64: dts: apple: t8103: Add dwc3 nodes
+cc938c6ce19f arm64: dts: apple: t8112: Add mtp device nodes for j413/j493
+15d446a61e93 arm64: dts: apple: t8112: Add dwc3 nodes
+4718d18ec35b arm64: dts: apple: t8112*: Put in audio nodes
+8df96568cab9 arm64: dts: apple: t8112: Add SMC node to devicetree
+6804b8b99c8a arm64: dts: apple: t8112-j493: Add spi3 node
+bdfa80ba7e5d arm64: dts: apple: t8112: Add PMU NVMEM and SMC RTC/reboot nodes
+3dbe73b961ed arm64: dts: apple: t8112: Add wlan/bt PCIe device nodes
+0b2893457911 arm64: dts: apple: t8112: Remove always-on from the PMP node
+a06ca85b22f6 Linux 6.6.2
+6927a91ccf72 btrfs: make found_logical_ret parameter mandatory for function queue_scrub_stripe()
+9ac639de466c btrfs: use u64 for buffer sizes in the tree search ioctls
+cd389b213f9d Revert "mmc: core: Capture correct oemid-bits for eMMC cards"
+84d24fe40db0 Revert "PCI/ASPM: Disable only ASPM_STATE_L1 when driver, disables L1"
+28e7c108c00c x86/amd_nb: Use Family 19h Models 60h-7Fh Function 4 IDs
+2bb15fb665b3 io_uring/net: ensure socket is marked connected on connect retry
+e8b45937c82d selftests: mptcp: fix wait_rm_addr/sf parameters
+1c6d07dd6998 selftests: mptcp: run userspace pm tests slower
+d8f492a05972 eventfs: Check for NULL ef in eventfs_set_attr()
+dc43609d12ec tracing/kprobes: Fix the order of argument descriptions
+172056918ad8 fbdev: fsl-diu-fb: mark wr_reg_wa() static
+630ee9bcaef6 ALSA: hda/realtek: Add support dual speaker for Dell
+b346a531159d fbdev: imsttfb: fix a resource leak in probe
+85fd4eb8f6f8 fbdev: imsttfb: fix double free in probe()
+afadf1fad63b arm64/arm: arm_pmuv3: perf: Don't truncate 64-bit registers
+a6abd5a8b2d5 spi: spi-zynq-qspi: add spi-mem to driver kconfig dependencies
+8519bbf23cbe ASoC: dapm: fix clock get name
+f4d32c52d829 ASoC: hdmi-codec: register hpd callback on component probe
+74b6a2f23ed0 ASoC: mediatek: mt8186_mt6366_rt1019_rt5682s: trivial: fix error messages
+d68a32ebff92 ASoC: rt712-sdca: fix speaker route missing issue
+2341c64551d1 drm/syncobj: fix DRM_SYNCOBJ_WAIT_FLAGS_WAIT_AVAILABLE
+e733f3e9dc7c drm/vc4: tests: Fix UAF in the mock helpers
+4bc46c047ecf fs: dlm: Simplify buffer size computation in dlm_create_debug_file()
+ada57fd312cb module/decompress: use kvmalloc() consistently
+85be1a73fd29 drivers: perf: Do not broadcast to other cpus when starting a counter
+98a52692167b net: ti: icss-iep: fix setting counter value
+625046cd1d5f RISC-V: Don't fail in riscv_of_parent_hartid() for disabled HARTs
+d5a116dbe712 net/sched: act_ct: Always fill offloading tuple iifidx
+2cd19d014dbf netfilter: nat: fix ipv6 nat redirect with mapped and scoped addresses
+cf6b960fbeff netfilter: xt_recent: fix (increase) ipv6 literal buffer length
+b925c9de4687 i2c: iproc: handle invalid slave state
+17e5530a74af net: enetc: shorten enetc_setup_xdp_prog() error message to fit NETLINK_MAX_FMTMSG_LEN
+0b8906fb48b9 virtio/vsock: Fix uninit-value in virtio_transport_recv_pkt()
+1a76fd99657d r8169: respect userspace disabling IFF_MULTICAST
+2ebff71ead86 vsock/virtio: remove socket from connected/bound list on shutdown
+6e188e71bc9a blk-core: use pr_warn_ratelimited() in bio_check_ro()
+56bd7901b5e9 nbd: fix uaf in nbd_open
+9931c9d04f4d tg3: power down device only on SYSTEM_POWER_OFF
+f00f49243901 ice: Fix VF-VF direction matching in drop rule in switchdev
+10fc8d424c5d ice: Fix VF-VF filter rules in switchdev mode
+6f8e5afed260 ice: lag: in RCU, use atomic allocation
+cceeddd5caab ice: Fix SRIOV LAG disable on non-compliant aggregate
+597ac160a4ad riscv: boot: Fix creation of loader.bin
+04e446f54f66 nvme: fix error-handling for io_uring nvme-passthrough
+fdfccd3dcb44 net/smc: put sk reference if close work was canceled
+f9eb4baabdc8 net/smc: allow cdc msg send rather than drop it with NULL sndbuf_desc
+afc6a04ff485 net/smc: fix dangling sock under state SMC_APPFINCLOSEWAIT
+92662d9fa9a7 octeontx2-pf: Free pending and dropped SQEs
+05f5b4bef3a4 selftests: pmtu.sh: fix result checking
+f93f84b203cd net: stmmac: xgmac: Enable support for multiple Flexible PPS outputs
+4db74c184af9 Fix termination state for idr_for_each_entry_ul()
+ec050b8b3c35 net: r8169: Disable multicast filter for RTL8168H and RTL8107E
+82c0c8b9643e dccp/tcp: Call security_inet_conn_request() after setting IPv6 addresses.
+0a2bcc3bb7d3 dccp: Call security_inet_conn_request() after setting IPv4 addresses.
+8c137b1cd60f net: page_pool: add missing free_percpu when page_pool_init fail
+d1835d260d52 octeontx2-pf: Fix holes in error code
+567811cc242e octeontx2-pf: Fix error codes
+b95e68308c04 inet: shrink struct flowi_common
+77bf9287c5ff bpf: Check map->usercnt after timer->timer is assigned
+b8a4f0a27c85 rxrpc: Fix two connection reaping bugs
+560992f41c0c tipc: Change nla_policy for bearer-related names to NLA_NUL_STRING
+d103fb672690 hsr: Prevent use after free in prp_create_tagged_frame()
+ff5cb6a4f0c6 llc: verify mac len before reading mac header
+deedc3e1e98e watchdog: ixp4xx: Make sure restart always works
+4bb72ab68093 watchdog: marvell_gti_wdt: Fix error code in probe()
+c8e639f5743c Input: synaptics-rmi4 - fix use after free in rmi_unregister_function()
+1498352ee930 pwm: brcmstb: Utilize appropriate clock APIs in suspend/resume
+7ba9338af17b pwm: sti: Reduce number of allocations and drop usage of chip_data
+6d8d01d59196 drm/amdgpu: don't put MQDs in VRAM on ARM | ARM64
+aad60bce9bea drm/amdgpu/gfx10,11: use memcpy_to/fromio for MQDs
+a4b4648c0149 regmap: prevent noinc writes from clobbering cache
+da4f8ab224dc cpupower: fix reference to nonexistent document
+215f8cc50842 media: cec: meson: always include meson sub-directory in Makefile
+14e1dbe283ee media: platform: mtk-mdp3: fix uninitialized variable in mdp_path_config()
+8bdaa92be1b9 media: mediatek: vcodec: using encoder device to alloc/free encoder memory
+2b2a4fcfb16d media: imx-jpeg: notify source chagne event when the first picture parsed
+a4b31459ce9a media: mediatek: vcodec: Handle invalid encoder vsi
+0747b6f7a359 media: verisilicon: Fixes clock list for rk3588 av1 decoder
+2b9cecf00102 media: dvb-usb-v2: af9035: fix missing unlock
+c1c88d6692e8 media: cadence: csi2rx: Unregister v4l2 async notifier
+cf3317306323 media: i2c: imx219: Drop IMX219_REG_CSI_LANE_MODE from common regs array
+ae6f196a8de9 media: i2c: imx219: Replace register addresses with macros
+2e943af4c79e media: i2c: imx219: Convert to CCI register access helpers
+c88a8a09c065 media: cedrus: Fix clock/reset sequence
+aae7598aff29 media: vidtv: mux: Add check and kfree for kstrdup
+a51335704a3f media: vidtv: psi: Add check for kstrdup
+f93844d2c8a7 media: s3c-camif: Avoid inappropriate kfree()
+495fd088870c media: mtk-jpegenc: Fix bug in JPEG encode quality selection
+746143690edd media: amphion: handle firmware debug message
+847599fffa52 media: bttv: fix use after free error due to btv->timeout timer
+f9f6e9cb9985 media: ov5640: Fix a memory leak when ov5640_probe fails
+9bceb07784c3 media: i2c: max9286: Fix some redundant of_node_put() calls
+cd567e637f7b media: ov5640: fix vblank unchange issue when work at dvp mode
+adf4abf76838 media: ov13b10: Fix some error checking in probe
+0fe806fbd7ca media: verisilicon: Do not enable G2 postproc downscale if source is narrower than destination
+24c06295f283 media: hantro: Check whether reset op is defined before use
+8e629e95d242 media: imx-jpeg: initiate a drain of the capture queue in dynamic resolution change
+c5773c37fd36 pcmcia: ds: fix possible name leak in error path in pcmcia_device_add()
+5439f0972456 pcmcia: ds: fix refcount leak in pcmcia_device_add()
+33519ccf9426 pcmcia: cs: fix possible hung task and memory leak pccardd()
+6723e58d6f4a cxl/hdm: Remove broken error path
+8b52796351f9 cxl/port: Fix @host confusion in cxl_dport_setup_regs()
+0fc37ec1b57e cxl/core/regs: Rename @dev to @host in struct cxl_register_map
+41f3c9f024c8 cxl/region: Fix cxl_region_rwsem lock held when returning to user space
+3cfdfce011c9 cxl/region: Use cxl_calc_interleave_pos() for auto-discovery
+c6ffabc66dfc cxl/region: Calculate a target position in a region interleave
+c4255b9b0a12 cxl/region: Prepare the decoder match range helper for reuse
+40169c208f4b rtc: pcf85363: fix wrong mask/val parameters in regmap_update_bits call
+cb051977e993 virt: sevguest: Fix passing a stack buffer as a scatterlist target
+0ca074f7d788 cxl/mem: Fix shutdown order
+d1d13a093422 cxl/memdev: Fix sanitize vs decoder setup locking
+d4e21e7b9420 cxl/pci: Fix sanitize notifier setup
+22c9bb1ed13e cxl/pci: Clarify devm host for memdev relative setup
+c57d7ce48830 cxl/pci: Remove inconsistent usage of dev_err_probe()
+e8347a1ce09c cxl/pci: Cleanup 'sanitize' to always poll
+f5355d4e48a6 cxl/pci: Remove unnecessary device reference management in sanitize work
+e5a8fc34283e rtc: brcmstb-waketimer: support level alarm_irq
+e49a51a96b53 i3c: Fix potential refcount leak in i3c_master_register_new_i3c_devs
+58d47044f639 rtla: Fix uninitialized variable found
+b29b09d5e2ff 9p/net: fix possible memory leak in p9_check_errors()
+0c67c9a2d443 perf vendor events intel: Add broadwellde two metrics
+8a1be9decb3a perf vendor events intel: Fix broadwellde tma_info_system_dram_bw_use metric
+581570045ae8 perf hist: Add missing puts to hist__account_cycles
+082c59ce88d6 libperf rc_check: Make implicit enabling work for GCC
+c139d4d928f4 perf machine: Avoid out of bounds LBR memory read
+965a977369d9 powerpc/vmcore: Add MMU information to vmcoreinfo
+72bb78c4048c usb: host: xhci-plat: fix possible kernel oops while resuming
+14a51fa54422 xhci: Loosen RPM as default policy to cover for AMD xHC 1.1
+e2eb96ae628c perf vendor events: Update PMC used in PM_RUN_INST_CMPL event for power10 platform
+e9643291b3e4 powerpc/pseries: fix potential memory leak in init_cpu_associativity()
+c3ff87e536d6 powerpc/imc-pmu: Use the correct spinlock initializer.
+6d21fb7d6285 powerpc/vas: Limit open window failure messages in log bufffer
+b18be5a5614f perf trace: Use the right bpf_probe_read(_str) variant for reading user data
+e3742a5789e4 powerpc: Hide empty pt_regs at base of the stack
+ad0c8f493732 powerpc/xive: Fix endian conversion size
+11bdf366dc6f powerpc/40x: Remove stale PTE_ATOMIC_UPDATES macro
+517310f7ce3a perf tools: Do not ignore the default vmlinux.h
+106a1f3abbc9 modpost: fix ishtp MODULE_DEVICE_TABLE built on big-endian host
+a073f26af71c modpost: fix tee MODULE_DEVICE_TABLE built on big-endian host
+a03b8ab0291e s390/ap: re-init AP queues on config on
+650b41987aae perf mem-events: Avoid uninitialized read
+4fa4152950c0 perf parse-events: Fix for term values that are raw events
+221d9cbc5dd2 perf build: Add missing comment about NO_LIBTRACEEVENT=1
+0967f1d9f19c interconnect: fix error handling in qnoc_probe()
+8d5e9875aeb2 powerpc: Only define __parse_fpscr() when required
+c39ab5703247 interconnect: qcom: osm-l3: Replace custom implementation of COUNT_ARGS()
+620cebaf877a interconnect: qcom: sm8350: Set ACV enable_mask
+c2857e17575a interconnect: qcom: sm8250: Set ACV enable_mask
+c164f5cad6d2 interconnect: qcom: sm8150: Set ACV enable_mask
+aa6f3ce1d940 interconnect: qcom: sm6350: Set ACV enable_mask
+a6fe66653faf interconnect: qcom: sdm845: Set ACV enable_mask
+435b71830117 interconnect: qcom: sdm670: Set ACV enable_mask

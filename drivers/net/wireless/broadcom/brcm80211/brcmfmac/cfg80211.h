@@ -94,6 +94,7 @@
 
 #define BRCMF_VIF_EVENT_TIMEOUT		msecs_to_jiffies(1500)
 
+
 /**
  * enum brcmf_scan_status - scan engine status
  *
@@ -242,7 +243,7 @@ struct brcmf_cfg80211_vif {
 	struct brcmf_cfg80211_profile profile;
 	unsigned long sme_state;
 	struct vif_saved_ie saved_ie;
-	struct list_head list;	
+	struct list_head list;
 	struct completion mgmt_tx;
 	unsigned long mgmt_tx_status;
 	u32 mgmt_tx_id;

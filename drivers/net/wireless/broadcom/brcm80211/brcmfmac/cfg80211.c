@@ -68,8 +68,6 @@
 #define RSN_CAP_MFPR_MASK		BIT(6)
 #define RSN_CAP_MFPC_MASK		BIT(7)
 #define RSN_PMKID_COUNT_LEN		2
-#define DPP_AKM_SUITE_TYPE		2
-#define WLAN_AKM_SUITE_DPP		SUITE(WLAN_OUI_WFA, DPP_AKM_SUITE_TYPE)
 
 #define VNDR_IE_CMD_LEN			4	/* length of the set command
 						 * string :"add", "del" (+ NUL)
@@ -100,6 +98,14 @@
 #define CTG_TOKEN_IDX			13
 #define PKT_TOKEN_IDX			15
 #define IDLE_TOKEN_IDX			12
+
+
+#define MGMT_AUTH_FRAME_DWELL_TIME	4000
+#define MGMT_AUTH_FRAME_WAIT_TIME	(MGMT_AUTH_FRAME_DWELL_TIME + 100)
+#define BRCMF_EXTAUTH_START	1
+#define BRCMF_EXTAUTH_ABORT	2
+#define BRCMF_EXTAUTH_FAIL	3
+#define BRCMF_EXTAUTH_SUCCESS	4
 
 struct brcmf_dump_survey {
 	u32 obss;
@@ -310,6 +316,30 @@ struct parsed_vndr_ies {
 	u32 count;
 	struct parsed_vndr_ie_info ie_info[VNDR_IE_PARSE_LIMIT];
 };
+
+struct brcmf_ext_tlv {
+	u8 id;
+	u8 len;
+	u8 ext_id;
+};
+
+struct parsed_ext_ie_info {
+	u8 *ie_ptr;
+	u32 ie_len;	/* total length including id & length field */
+	struct brcmf_ext_tlv ie_data;
+};
+
+struct parsed_extension_ies {
+	u32 count;
+	struct parsed_ext_ie_info ie_info[VNDR_IE_PARSE_LIMIT];
+};
+
+struct dot11_assoc_resp {
+	u16	capability;	/* capability information */
+	u16	status;		/* status code */
+	u16	aid;		/* association ID */
+};
+
 
 static u8 nl80211_band_to_fwil(enum nl80211_band band)
 {
@@ -1190,8 +1220,14 @@ brcmf_cfg80211_scan(struct wiphy *wiphy, struct cfg80211_scan_request *request)
 	}
 
 	/* If scan req comes for p2p0, send it over primary I/F */
-	if (vif == cfg->p2p.bss_idx[P2PAPI_BSSCFG_DEVICE].vif)
+	if (vif == cfg->p2p.bss_idx[P2PAPI_BSSCFG_DEVICE].vif) {
 		vif = cfg->p2p.bss_idx[P2PAPI_BSSCFG_PRIMARY].vif;
+		/* Only send probe requests with p2p */
+		err = brcmf_vif_set_mgmt_ie(vif, BRCMF_VNDR_IE_PRBREQ_FLAG,
+				    									request->ie, request->ie_len);
+		if (err)
+			goto scan_out;
+	}
 
 	brcmf_dbg(SCAN, "START ESCAN\n");
 
@@ -1202,12 +1238,6 @@ brcmf_cfg80211_scan(struct wiphy *wiphy, struct cfg80211_scan_request *request)
 	err = brcmf_p2p_scan_prep(wiphy, request, vif);
 	if (err)
 		goto scan_out;
-
-	err = brcmf_vif_set_mgmt_ie(vif, BRCMF_VNDR_IE_PRBREQ_FLAG,
-				    request->ie, request->ie_len);
-	if (err)
-		goto scan_out;
-
 	err = brcmf_do_escan(vif->ifp, request);
 	if (err)
 		goto scan_out;
@@ -1372,7 +1402,7 @@ static int brcmf_set_pmk(struct brcmf_if *ifp, const u8 *pmk_data, u16 pmk_len)
 static int brcmf_set_sae_password(struct brcmf_if *ifp, const u8 *pwd_data,
 				  u16 pwd_len)
 {
-	return brcmf_set_wsec(ifp, pwd_data, pwd_len, BRCMF_WSEC_PASSPHRASE);
+	return brcmf_set_wsec(ifp, pwd_data, pwd_len, BRCMF_WSEC_SAE_PASSPHRASE);
 }
 
 static void brcmf_link_down(struct brcmf_cfg80211_vif *vif, u16 reason,
@@ -1875,10 +1905,6 @@ brcmf_set_key_mgmt(struct net_device *ndev, struct cfg80211_connect_params *sme)
 			else
 				profile->use_fwsup = BRCMF_PROFILE_FWSUP_ROAM;
 			break;
-		case WLAN_AKM_SUITE_DPP:
-			val = WFA_AUTH_DPP;
-			profile->use_fwsup = BRCMF_PROFILE_FWSUP_NONE;
-			break;
 		case WLAN_AKM_SUITE_OWE:
 			val = WPA3_AUTH_OWE;
 			profile->use_fwsup = BRCMF_PROFILE_FWSUP_ROAM;
@@ -1973,22 +1999,6 @@ brcmf_set_key_mgmt(struct net_device *ndev, struct cfg80211_connect_params *sme)
 		mfp = BRCMF_MFP_REQUIRED;
 	else if (rsn_cap & RSN_CAP_MFPC_MASK)
 		mfp = BRCMF_MFP_CAPABLE;
-	/* In case of dpp, very low tput is observed if MFPC is set in
-	 * firmmare. Firmware needs to ensure that MFPC is not set when
-	 * MFPR was requested from fmac. However since this change being
-	 * specific to DPP, fmac needs to set wpa_auth prior to mfp, so
-	 * that firmware can use this info to prevent MFPC being set in
-	 * case of dpp.
-	 */
-	if (val == WFA_AUTH_DPP) {
-		brcmf_dbg(CONN, "setting wpa_auth to 0x%0x\n", val);
-		err = brcmf_fil_bsscfg_int_set(netdev_priv(ndev), "wpa_auth",
-					       val);
-		if (err) {
-			bphy_err(drvr, "could not set wpa_auth (%d)\n", err);
-			return err;
-		}
-	}
 
 	brcmf_fil_bsscfg_int_set(netdev_priv(ndev), "mfp", mfp);
 	offset += RSN_CAP_LEN;
@@ -4704,6 +4714,68 @@ brcmf_vndr_ie(u8 *iebuf, s32 pktflag, u8 *ie_ptr, u32 ie_len, s8 *add_del_cmd)
 	return ie_len + VNDR_IE_HDR_SIZE;
 }
 
+static s32
+brcmf_parse_extension_ies(const u8 *extension_ie_buf, u32 extension_ie_len,
+			  struct parsed_extension_ies *extension_ies)
+{
+	struct brcmf_ext_tlv *ext_ie;
+	struct brcmf_tlv *ie;
+	struct parsed_ext_ie_info *parsed_info;
+	s32 remaining_len;
+
+	remaining_len = (s32)extension_ie_len;
+	memset(extension_ies, 0, sizeof(*extension_ies));
+
+	ie = (struct brcmf_tlv *)extension_ie_buf;
+	while (ie) {
+		if (ie->id != WLAN_EID_EXTENSION)
+			goto next;
+		ext_ie = (struct brcmf_ext_tlv *)ie;
+
+		/* len should be bigger than ext_id + one data */
+		if (ext_ie->len < 2) {
+			brcmf_err("invalid ext_ie ie. length is too small %d\n",
+				  ext_ie->len);
+			goto next;
+		}
+
+		/* skip parsing the HE capab, HE_6G_capa & oper IE from upper layer
+		 * to avoid sending it to the FW, as these IEs will be
+		 * added by the FW based on the MAC & PHY capab if HE
+		 * is enabled.
+		 */
+		if (ext_ie->ext_id == WLAN_EID_EXT_HE_CAPABILITY ||
+		    ext_ie->ext_id == WLAN_EID_EXT_HE_OPERATION ||
+		    ext_ie->ext_id == WLAN_EID_EXT_HE_6GHZ_CAPA)
+			goto next;
+
+		parsed_info = &extension_ies->ie_info[extension_ies->count];
+
+		parsed_info->ie_ptr = (char *)ext_ie;
+		parsed_info->ie_len = ext_ie->len + TLV_HDR_LEN;
+		memcpy(&parsed_info->ie_data, ext_ie, sizeof(*ext_ie));
+
+		extension_ies->count++;
+
+		brcmf_dbg(TRACE, "** EXT_IE %d, len 0x%02x EXT_ID: %d\n",
+			  parsed_info->ie_data.id,
+			  parsed_info->ie_data.len,
+			  parsed_info->ie_data.ext_id);
+
+		if (extension_ies->count >= VNDR_IE_PARSE_LIMIT)
+			break;
+next:
+		remaining_len -= (ie->len + TLV_HDR_LEN);
+		if (remaining_len <= TLV_HDR_LEN)
+			ie = NULL;
+		else
+			ie = (struct brcmf_tlv *)(((u8 *)ie) + ie->len +
+				TLV_HDR_LEN);
+	}
+	return 0;
+}
+
+
 s32 brcmf_vif_set_mgmt_ie(struct brcmf_cfg80211_vif *vif, s32 pktflag,
 			  const u8 *vndr_ie_buf, u32 vndr_ie_len)
 {
@@ -4722,6 +4794,9 @@ s32 brcmf_vif_set_mgmt_ie(struct brcmf_cfg80211_vif *vif, s32 pktflag,
 	struct parsed_vndr_ies old_vndr_ies;
 	struct parsed_vndr_ies new_vndr_ies;
 	struct parsed_vndr_ie_info *vndrie_info;
+	struct parsed_extension_ies new_ext_ies;
+	struct parsed_extension_ies old_ext_ies;
+	struct parsed_ext_ie_info *extie_info;
 	s32 i;
 	u8 *ptr;
 	int remained_buf_len;
@@ -4786,6 +4861,13 @@ s32 brcmf_vif_set_mgmt_ie(struct brcmf_cfg80211_vif *vif, s32 pktflag,
 			       vndrie_info->ie_len);
 			parsed_ie_buf_len += vndrie_info->ie_len;
 		}
+		brcmf_parse_extension_ies(vndr_ie_buf, vndr_ie_len, &new_ext_ies);
+		for (i = 0; i < new_ext_ies.count; i++) {
+			extie_info = &new_ext_ies.ie_info[i];
+			memcpy(ptr + parsed_ie_buf_len, extie_info->ie_ptr,
+			       extie_info->ie_len);
+			parsed_ie_buf_len += extie_info->ie_len;
+		}
 	}
 
 	if (mgmt_ie_buf && *mgmt_ie_len) {
@@ -4798,6 +4880,8 @@ s32 brcmf_vif_set_mgmt_ie(struct brcmf_cfg80211_vif *vif, s32 pktflag,
 
 		/* parse old vndr_ie */
 		brcmf_parse_vndr_ies(mgmt_ie_buf, *mgmt_ie_len, &old_vndr_ies);
+		/* parse old ext_ie */
+		brcmf_parse_extension_ies(mgmt_ie_buf, *mgmt_ie_len, &old_ext_ies);
 
 		/* make a command to delete old ie */
 		for (i = 0; i < old_vndr_ies.count; i++) {
@@ -4815,6 +4899,24 @@ s32 brcmf_vif_set_mgmt_ie(struct brcmf_cfg80211_vif *vif, s32 pktflag,
 			curr_ie_buf += del_add_ie_buf_len;
 			total_ie_buf_len += del_add_ie_buf_len;
 		}
+		/* make a command to delete old extension ie */
+		for (i = 0; i < old_ext_ies.count; i++) {
+			extie_info = &old_ext_ies.ie_info[i];
+
+			brcmf_dbg(TRACE, "DEL EXT_IE : %d, Len: %d , ext_id:%d\n",
+				  extie_info->ie_data.id,
+				  extie_info->ie_data.len,
+				  extie_info->ie_data.ext_id);
+
+			del_add_ie_buf_len = brcmf_vndr_ie(curr_ie_buf,
+							   pktflag | BRCMF_VNDR_IE_CUSTOM_FLAG,
+							   extie_info->ie_ptr,
+							   extie_info->ie_len,
+							   "del");
+			curr_ie_buf += del_add_ie_buf_len;
+			total_ie_buf_len += del_add_ie_buf_len;
+		}
+
 	}
 
 	*mgmt_ie_len = 0;
@@ -4856,6 +4958,40 @@ s32 brcmf_vif_set_mgmt_ie(struct brcmf_cfg80211_vif *vif, s32 pktflag,
 			curr_ie_buf += del_add_ie_buf_len;
 			total_ie_buf_len += del_add_ie_buf_len;
 		}
+		/* make a command to add new EXT ie */
+		for (i = 0; i < new_ext_ies.count; i++) {
+			extie_info = &new_ext_ies.ie_info[i];
+
+			/* verify remained buf size before copy data */
+			if (remained_buf_len < (extie_info->ie_data.len +
+							VNDR_IE_VSIE_OFFSET)) {
+				bphy_err(drvr, "no space in mgmt_ie_buf: len left %d",
+					 remained_buf_len);
+				break;
+			}
+			remained_buf_len -= (extie_info->ie_len +
+					     VNDR_IE_VSIE_OFFSET);
+
+			brcmf_dbg(TRACE, "ADDED EXT ID : %d, Len: %d, OUI:%d\n",
+				  extie_info->ie_data.id,
+				  extie_info->ie_data.len,
+				  extie_info->ie_data.ext_id);
+
+			del_add_ie_buf_len = brcmf_vndr_ie(curr_ie_buf,
+							   pktflag | BRCMF_VNDR_IE_CUSTOM_FLAG,
+							   extie_info->ie_ptr,
+							   extie_info->ie_len,
+							   "add");
+
+			/* save the parsed IE in wl struct */
+			memcpy(ptr + (*mgmt_ie_len), extie_info->ie_ptr,
+			       extie_info->ie_len);
+			*mgmt_ie_len += extie_info->ie_len;
+
+			curr_ie_buf += del_add_ie_buf_len;
+			total_ie_buf_len += del_add_ie_buf_len;
+		}
+
 	}
 	if (total_ie_buf_len) {
 		err  = brcmf_fil_bsscfg_data_set(ifp, "vndr_ie", iovar_ie_buf,
@@ -5407,6 +5543,7 @@ brcmf_cfg80211_mgmt_tx(struct wiphy *wiphy, struct wireless_dev *wdev,
 	s32 ie_len;
 	struct brcmf_fil_action_frame_le *action_frame;
 	struct brcmf_fil_af_params_le *af_params;
+
 	bool ack;
 	s32 chan_nr;
 	u32 freq;
@@ -5490,11 +5627,85 @@ brcmf_cfg80211_mgmt_tx(struct wiphy *wiphy, struct wireless_dev *wdev,
 		cfg80211_mgmt_tx_status(wdev, *cookie, buf, len, ack,
 					GFP_KERNEL);
 		kfree(af_params);
+	} else if (ieee80211_is_auth(mgmt->frame_control)) {
+		struct brcmf_mf_params_le *mf_params;
+		u32 mf_params_len;
+		s32 timeout;
+		u32 hw_channel;
+
+		reinit_completion(&vif->mgmt_tx);
+		clear_bit(BRCMF_MGMT_TX_ACK, &vif->mgmt_tx_status);
+		clear_bit(BRCMF_MGMT_TX_NOACK, &vif->mgmt_tx_status);
+		clear_bit(BRCMF_MGMT_TX_OFF_CHAN_COMPLETED,
+			  &vif->mgmt_tx_status);
+
+		mf_params_len = offsetof(struct brcmf_mf_params_le, data) +
+				(len - DOT11_MGMT_HDR_LEN);
+		mf_params = kzalloc(mf_params_len, GFP_KERNEL);
+		if (!mf_params) {
+			err = -ENOMEM;
+			goto exit;
+		}
+
+		mf_params->dwell_time = cpu_to_le32(MGMT_AUTH_FRAME_DWELL_TIME);
+		mf_params->len = cpu_to_le16(len - DOT11_MGMT_HDR_LEN);
+		mf_params->frame_control = mgmt->frame_control;
+
+		if (chan) {
+			freq = chan->center_freq;
+			chan_nr = ieee80211_frequency_to_channel(freq);
+			mf_params->channel = cpu_to_le32(chan_nr);
+		} else {
+			brcmf_fil_cmd_int_get(vif->ifp, BRCMF_C_GET_CHANNEL,
+					      &hw_channel);
+			mf_params->channel = hw_channel;
+		}
+
+		memcpy(&mf_params->da[0], &mgmt->da[0], ETH_ALEN);
+		memcpy(&mf_params->bssid[0], &mgmt->bssid[0], ETH_ALEN);
+		mf_params->packet_id = cpu_to_le32(*cookie);
+		memcpy(mf_params->data, &buf[DOT11_MGMT_HDR_LEN],
+		       le16_to_cpu(mf_params->len));
+
+		brcmf_dbg(
+			TRACE,
+			"Auth frame, cookie=%d, fc=%04x, len=%d, channel=%d\n",
+			le32_to_cpu(mf_params->packet_id),
+			le16_to_cpu(mf_params->frame_control),
+			le16_to_cpu(mf_params->len),
+			le32_to_cpu(mf_params->channel));
+
+		vif->mgmt_tx_id = le32_to_cpu(mf_params->packet_id);
+		set_bit(BRCMF_MGMT_TX_SEND_FRAME, &vif->mgmt_tx_status);
+
+		err = brcmf_fil_bsscfg_data_set(vif->ifp, "mgmt_frame",
+						mf_params, mf_params_len);
+		if (err) {
+			bphy_err(drvr, "Failed to send Auth frame: err=%d\n",
+				 err);
+			goto tx_status;
+		}
+
+		timeout = wait_for_completion_timeout(
+			&vif->mgmt_tx, MGMT_AUTH_FRAME_WAIT_TIME);
+		if (test_bit(BRCMF_MGMT_TX_ACK, &vif->mgmt_tx_status)) {
+			brcmf_dbg(TRACE,
+				  "TX Auth frame operation is success\n");
+			ack = true;
+		} else {
+			bphy_err(
+				drvr,
+				"TX Auth frame operation is failed: status=%ld)\n",
+				vif->mgmt_tx_status);
+		}
+tx_status:
+		cfg80211_mgmt_tx_status(wdev, *cookie, buf, len, ack,
+					GFP_KERNEL);
+		kfree(mf_params);
 	} else {
 		brcmf_dbg(TRACE, "Unhandled, fc=%04x!!\n", mgmt->frame_control);
 		brcmf_dbg_hex_dump(true, buf, len, "payload, len=%zu\n", len);
 	}
-
 exit:
 	return err;
 }
@@ -5955,6 +6166,43 @@ static int brcmf_cfg80211_set_cqm_rssi_config(struct wiphy *wiphy,
 	return err;
 }
 
+static int
+brcmf_cfg80211_external_auth(struct wiphy *wiphy, struct net_device *dev,
+			     struct cfg80211_external_auth_params *params)
+{
+	struct brcmf_if *ifp;
+	struct brcmf_pub *drvr;
+	struct brcmf_auth_req_status_le auth_status;
+	int ret = 0;
+
+	brcmf_dbg(TRACE, "Enter\n");
+
+	ifp = netdev_priv(dev);
+	drvr = ifp->drvr;
+	if (params->status == WLAN_STATUS_SUCCESS) {
+		auth_status.flags = cpu_to_le16(BRCMF_EXTAUTH_SUCCESS);
+	} else {
+		bphy_err(drvr, "External authentication failed: status=%d\n",
+			 params->status);
+		auth_status.flags = cpu_to_le16(BRCMF_EXTAUTH_FAIL);
+	}
+
+	memcpy(auth_status.peer_mac, params->bssid, ETH_ALEN);
+	auth_status.ssid_len = cpu_to_le32(
+		min_t(u8, params->ssid.ssid_len, IEEE80211_MAX_SSID_LEN));
+	memcpy(auth_status.ssid, params->ssid.ssid, auth_status.ssid_len);
+	memset(auth_status.pmkid, 0, WLAN_PMKID_LEN);
+	if (params->pmkid)
+		memcpy(auth_status.pmkid, params->pmkid, WLAN_PMKID_LEN);
+
+	ret = brcmf_fil_iovar_data_set(ifp, "auth_status", &auth_status,
+				       sizeof(auth_status));
+	if (ret < 0)
+		bphy_err(drvr, "auth_status iovar failed: ret=%d\n", ret);
+
+	return ret;
+}
+
 static struct cfg80211_ops brcmf_cfg80211_ops = {
 	.add_virtual_intf = brcmf_cfg80211_add_iface,
 	.del_virtual_intf = brcmf_cfg80211_del_iface,
@@ -6004,6 +6252,7 @@ static struct cfg80211_ops brcmf_cfg80211_ops = {
 	.del_pmk = brcmf_cfg80211_del_pmk,
 	.set_bitrate_mask = brcmf_cfg80211_set_bitrate,
 	.set_cqm_rssi_config = brcmf_cfg80211_set_cqm_rssi_config,
+	.external_auth = brcmf_cfg80211_external_auth,
 };
 
 struct cfg80211_ops *brcmf_cfg80211_get_ops(struct brcmf_mp_device *settings)
@@ -6342,6 +6591,11 @@ static s32 brcmf_get_assoc_ies(struct brcmf_cfg80211_info *cfg,
 		conn_info->req_ie_len = 0;
 		conn_info->req_ie = NULL;
 	}
+
+	/* resp_len is the total length of assoc resp
+	 * which includes 6 bytes of aid/status code/capabilities.
+	 * the assoc_resp_ie length should minus the 6 bytes which starts from rate_ie.
+	 */
 	if (resp_len) {
 		err = brcmf_fil_iovar_data_get(ifp, "assoc_resp_ies",
 					       cfg->extra_buf,
@@ -6350,7 +6604,7 @@ static s32 brcmf_get_assoc_ies(struct brcmf_cfg80211_info *cfg,
 			bphy_err(drvr, "could not get assoc resp (%d)\n", err);
 			return err;
 		}
-		conn_info->resp_ie_len = resp_len;
+		conn_info->resp_ie_len = resp_len - sizeof(struct dot11_assoc_resp);
 		conn_info->resp_ie =
 		    kmemdup(cfg->extra_buf, conn_info->resp_ie_len,
 			    GFP_KERNEL);
@@ -7022,6 +7276,14 @@ static void brcmf_register_event_handlers(struct brcmf_cfg80211_info *cfg)
 			    brcmf_p2p_notify_action_tx_complete);
 	brcmf_fweh_register(cfg->pub, BRCMF_E_ACTION_FRAME_OFF_CHAN_COMPLETE,
 			    brcmf_p2p_notify_action_tx_complete);
+	brcmf_fweh_register(cfg->pub, BRCMF_E_EXT_AUTH_REQ,
+			    brcmf_notify_ext_auth_request);
+	brcmf_fweh_register(cfg->pub, BRCMF_E_EXT_AUTH_FRAME_RX,
+			    brcmf_notify_auth_frame_rx);
+	brcmf_fweh_register(cfg->pub, BRCMF_E_MGMT_FRAME_TXSTATUS,
+			    brcmf_notify_mgmt_tx_status);
+	brcmf_fweh_register(cfg->pub, BRCMF_E_MGMT_FRAME_OFF_CHAN_COMPLETE,
+			    brcmf_notify_mgmt_tx_status);
 	brcmf_fweh_register(cfg->pub, BRCMF_E_PSK_SUP,
 			    brcmf_notify_connect_status);
 	if (rssi_event.version == BRCMF_RSSI_EVENT_IFX_VERSION)
@@ -8090,6 +8352,7 @@ brcmf_txrx_stypes[NUM_NL80211_IFTYPES] = {
 	[NL80211_IFTYPE_STATION] = {
 		.tx = 0xffff,
 		.rx = BIT(IEEE80211_STYPE_ACTION >> 4) |
+		      BIT(IEEE80211_STYPE_AUTH >> 4) |
 		      BIT(IEEE80211_STYPE_PROBE_REQ >> 4)
 	},
 	[NL80211_IFTYPE_P2P_CLIENT] = {
